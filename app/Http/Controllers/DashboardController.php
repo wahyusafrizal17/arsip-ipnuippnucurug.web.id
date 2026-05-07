@@ -2,28 +2,57 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\UserRole;
 use App\Models\IncomingLetter;
 use App\Models\Inventory;
+use App\Models\JointLetter;
 use App\Models\OutgoingLetter;
+use App\Models\User;
 
 class DashboardController extends Controller
 {
     public function index()
     {
-        $incomingCount = IncomingLetter::query()->count();
-        $outgoingCount = OutgoingLetter::query()->count();
+        /** @var User $user */
+        $user = auth()->user();
+
+        $jointCount = JointLetter::query()->count();
         $inventoryCount = Inventory::query()->count();
 
         $from = now()->subMonths(5)->startOfMonth();
 
-        $incomingGrouped = IncomingLetter::query()
-            ->where('tanggal_surat', '>=', $from)
+        if ($user->role === UserRole::Admin) {
+            $incomingIpnu = IncomingLetter::query()->where('organization', 'ipnu')->count();
+            $incomingIppnu = IncomingLetter::query()->where('organization', 'ippnu')->count();
+            $outgoingIpnu = OutgoingLetter::query()->where('organization', 'ipnu')->count();
+            $outgoingIppnu = OutgoingLetter::query()->where('organization', 'ippnu')->count();
+
+            $incomingQuery = IncomingLetter::query()->where('tanggal_surat', '>=', $from);
+            $outgoingQuery = OutgoingLetter::query()->where('tanggal_surat', '>=', $from);
+        } else {
+            $org = $user->role->letterOrganization();
+            $incomingIpnu = null;
+            $incomingIppnu = null;
+            $outgoingIpnu = null;
+            $outgoingIppnu = null;
+
+            $incomingCount = IncomingLetter::query()->where('organization', $org)->count();
+            $outgoingCount = OutgoingLetter::query()->where('organization', $org)->count();
+
+            $incomingQuery = IncomingLetter::query()
+                ->where('organization', $org)
+                ->where('tanggal_surat', '>=', $from);
+            $outgoingQuery = OutgoingLetter::query()
+                ->where('organization', $org)
+                ->where('tanggal_surat', '>=', $from);
+        }
+
+        $incomingGrouped = $incomingQuery
             ->get()
             ->groupBy(fn (IncomingLetter $letter) => $letter->tanggal_surat->format('Y-m'))
             ->map->count();
 
-        $outgoingGrouped = OutgoingLetter::query()
-            ->where('tanggal_surat', '>=', $from)
+        $outgoingGrouped = $outgoingQuery
             ->get()
             ->groupBy(fn (OutgoingLetter $letter) => $letter->tanggal_surat->format('Y-m'))
             ->map->count();
@@ -41,9 +70,27 @@ class DashboardController extends Controller
 
         $chartMax = max(array_merge($incomingTrend, $outgoingTrend, [1]));
 
+        if ($user->role === UserRole::Admin) {
+            return view('dashboard', compact(
+                'user',
+                'incomingIpnu',
+                'incomingIppnu',
+                'outgoingIpnu',
+                'outgoingIppnu',
+                'jointCount',
+                'inventoryCount',
+                'chartLabels',
+                'incomingTrend',
+                'outgoingTrend',
+                'chartMax',
+            ));
+        }
+
         return view('dashboard', compact(
+            'user',
             'incomingCount',
             'outgoingCount',
+            'jointCount',
             'inventoryCount',
             'chartLabels',
             'incomingTrend',

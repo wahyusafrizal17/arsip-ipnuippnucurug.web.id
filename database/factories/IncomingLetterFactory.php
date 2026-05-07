@@ -19,6 +19,7 @@ class IncomingLetterFactory extends Factory
             'pengirim' => fake()->company(),
             'perihal' => fake()->sentence(rand(6, 14)),
             'file_path' => null,
+            'organization' => fake()->randomElement(['ipnu', 'ippnu']),
         ];
     }
 }

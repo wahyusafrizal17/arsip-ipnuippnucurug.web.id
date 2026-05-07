@@ -7,7 +7,14 @@
 
     <title>@if($title){{ $title }} · @endif{{ config('app.name', 'Arsip Digital') }}</title>
 
-    <link rel="icon" type="image/png" href="{{ asset('images/logo-ipnu.png') }}">
+    @php
+        $faviconLogo = match (Auth::user()->role) {
+            \App\Enums\UserRole::Ipnu => 'images/logo-ipnu.png',
+            \App\Enums\UserRole::Ippnu => 'images/logo-ippnu.png',
+            default => 'images/logo-ipnu.png',
+        };
+    @endphp
+    <link rel="icon" type="image/png" href="{{ asset($faviconLogo) }}">
 
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600,700&display=swap" rel="stylesheet">
@@ -36,16 +43,28 @@
         >
             <div class="flex h-16 shrink-0 items-center gap-3 border-b border-slate-200 px-4 dark:border-slate-800">
                 <span class="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-full bg-white shadow-md ring-2 ring-yellow-400/50 dark:bg-emerald-950 dark:ring-yellow-500/40">
-                    <img
-                        src="{{ asset('images/logo-ipnu.png') }}"
-                        alt="Logo IPNU"
-                        width="44"
-                        height="44"
-                        class="h-full w-full object-contain p-0.5"
-                    />
+                    @if(Auth::user()->role === \App\Enums\UserRole::Ipnu)
+                        <img
+                            src="{{ asset('images/logo-ipnu.png') }}"
+                            alt="Logo IPNU"
+                            width="44"
+                            height="44"
+                            class="h-full w-full object-contain p-0.5"
+                        />
+                    @elseif(Auth::user()->role === \App\Enums\UserRole::Ippnu)
+                        <img
+                            src="{{ asset('images/logo-ippnu.png') }}"
+                            alt="Logo IPPNU"
+                            width="44"
+                            height="44"
+                            class="h-full w-full object-contain p-0.5"
+                        />
+                    @else
+                        <x-application-logo class="h-7 w-7 shrink-0 text-emerald-700 dark:text-emerald-400" />
+                    @endif
                 </span>
                 <div class="min-w-0">
-                    <p class="text-xs font-medium uppercase tracking-wide text-emerald-700 dark:text-emerald-400">IPNU</p>
+                    <p class="text-xs font-medium uppercase tracking-wide text-emerald-700 dark:text-emerald-400">{{ Auth::user()->role->label() }}</p>
                     <p class="truncate text-base font-semibold leading-tight">{{ config('app.name') }}</p>
                 </div>
             </div>

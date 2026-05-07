@@ -3,27 +3,37 @@
         <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
                 <h1 class="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">Surat Masuk</h1>
-                <p class="mt-1 text-sm text-slate-600 dark:text-slate-400">Kelola arsip surat masuk dan dokumen PDF.</p>
+                <p class="mt-1 text-sm text-slate-600 dark:text-slate-400">{{ $pageSubtitle }}</p>
             </div>
-            <a href="{{ route('incoming-letters.create') }}" class="inline-flex items-center justify-center gap-2 rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-indigo-600/25 transition hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600">
+            <a href="{{ route('incoming-letters.create', array_filter(['organization' => auth()->user()->isAdmin() ? request('organization') : null])) }}" class="inline-flex items-center justify-center gap-2 rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-indigo-600/25 transition hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600">
                 <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
                 Tambah
             </a>
         </div>
 
         <form method="GET" action="{{ route('incoming-letters.index') }}" class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-            <div class="grid gap-4 md:grid-cols-4 md:items-end">
+            <div class="grid gap-4 md:grid-cols-5 md:items-end">
+                @if(auth()->user()->isAdmin())
+                    <div>
+                        <label for="organization" class="block text-xs font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400">Organisasi</label>
+                        <select id="organization" name="organization" class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:border-slate-700 dark:bg-slate-950 dark:text-white">
+                            <option value="" @selected(! request('organization'))>Semua (IPNU &amp; IPPNU)</option>
+                            <option value="ipnu" @selected(request('organization') === 'ipnu')>IPNU</option>
+                            <option value="ippnu" @selected(request('organization') === 'ippnu')>IPPNU</option>
+                        </select>
+                    </div>
+                @endif
                 <div class="md:col-span-2">
                     <label for="q" class="block text-xs font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400">Pencarian</label>
                     <input id="q" name="q" type="search" value="{{ request('q') }}" placeholder="Pengirim, perihal, klasifikasi, indeks..." class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:border-slate-700 dark:bg-slate-950 dark:text-white" />
                 </div>
                 <div>
                     <label for="date_from" class="block text-xs font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400">Dari tanggal</label>
-                    <input id="date_from" name="date_from" type="date" value="{{ request('date_from') }}" class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm dark:border-slate-700 dark:bg-slate-950 dark:text-white" />
+                    <input id="date_from" name="date_from" type="date" value="{{ request('date_from') }}" class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:border-slate-700 dark:bg-slate-950 dark:text-white" />
                 </div>
                 <div>
                     <label for="date_to" class="block text-xs font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400">Sampai tanggal</label>
-                    <input id="date_to" name="date_to" type="date" value="{{ request('date_to') }}" class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm dark:border-slate-700 dark:bg-slate-950 dark:text-white" />
+                    <input id="date_to" name="date_to" type="date" value="{{ request('date_to') }}" class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:border-slate-700 dark:bg-slate-950 dark:text-white" />
                 </div>
             </div>
             <input type="hidden" name="sort" value="{{ $sort }}" />
@@ -39,6 +49,9 @@
                 <table class="min-w-full divide-y divide-slate-200 dark:divide-slate-800">
                     <thead class="bg-slate-50 dark:bg-slate-950/60">
                         <tr>
+                            @if(auth()->user()->isAdmin())
+                                <th scope="col" class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-600 dark:text-slate-400">Organisasi</th>
+                            @endif
                             <th scope="col" class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-600 dark:text-slate-400">Klasifikasi</th>
                             <th scope="col" class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-600 dark:text-slate-400">Indeks</th>
                             <th scope="col" class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-600 dark:text-slate-400">
@@ -61,6 +74,9 @@
                     <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
                         @forelse($letters as $letter)
                             <tr class="hover:bg-slate-50/80 dark:hover:bg-slate-800/40">
+                                @if(auth()->user()->isAdmin())
+                                    <td class="whitespace-nowrap px-4 py-3 text-sm font-medium uppercase text-slate-700 dark:text-slate-300">{{ strtoupper($letter->organization) }}</td>
+                                @endif
                                 <td class="whitespace-nowrap px-4 py-3 text-sm text-slate-900 dark:text-slate-100">{{ config('archive.klasifikasi')[$letter->klasifikasi] ?? $letter->klasifikasi }}</td>
                                 <td class="whitespace-nowrap px-4 py-3 text-sm font-medium text-slate-700 dark:text-slate-300">{{ config('archive.indeks')[$letter->indeks] ?? strtoupper($letter->indeks) }}</td>
                                 <td class="whitespace-nowrap px-4 py-3 text-sm text-slate-600 dark:text-slate-400">{{ $letter->tanggal_surat->format('d/m/Y') }}</td>
@@ -80,7 +96,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6" class="px-4 py-12 text-center text-sm text-slate-500 dark:text-slate-400">Belum ada data surat masuk.</td>
+                                <td colspan="{{ auth()->user()->isAdmin() ? 8 : 7 }}" class="px-4 py-12 text-center text-sm text-slate-500 dark:text-slate-400">Belum ada data surat masuk.</td>
                             </tr>
                         @endforelse
                     </tbody>

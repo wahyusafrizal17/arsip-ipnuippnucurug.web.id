@@ -18,7 +18,7 @@ class StoreOutgoingLetterRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
+        $rules = [
             'klasifikasi' => ['required', 'string', Rule::in(array_keys(config('archive.klasifikasi', [])))],
             'indeks' => ['required', 'string', Rule::in(array_keys(config('archive.indeks', [])))],
             'tanggal_surat' => ['required', 'date'],
@@ -26,6 +26,12 @@ class StoreOutgoingLetterRequest extends FormRequest
             'perihal' => ['required', 'string'],
             'file_dokumen' => ['required', 'file', 'mimes:pdf', 'max:10240'],
         ];
+
+        if ($this->user()?->isAdmin()) {
+            $rules['organization'] = ['required', Rule::in(['ipnu', 'ippnu'])];
+        }
+
+        return $rules;
     }
 
     /**
@@ -40,6 +46,7 @@ class StoreOutgoingLetterRequest extends FormRequest
             'penerima' => 'penerima',
             'perihal' => 'perihal',
             'file_dokumen' => 'dokumen PDF',
+            'organization' => 'organisasi',
         ];
     }
 }

@@ -21,13 +21,21 @@ class OutgoingLetterSeeder extends Seeder
             throw new RuntimeException('Gagal membaca: '.$fixture);
         }
 
-        OutgoingLetter::factory()
-            ->count(10)
+        $letters = OutgoingLetter::factory()
+            ->count(5)
+            ->state(['organization' => 'ipnu'])
             ->create()
-            ->each(function (OutgoingLetter $letter) use ($pdf) {
-                $path = 'outgoing_letters/sk-'.$letter->id.'.pdf';
-                Storage::disk('public_web')->put($path, $pdf);
-                $letter->update(['file_path' => $path]);
-            });
+            ->concat(
+                OutgoingLetter::factory()
+                    ->count(5)
+                    ->state(['organization' => 'ippnu'])
+                    ->create()
+            );
+
+        $letters->each(function (OutgoingLetter $letter) use ($pdf) {
+            $path = 'outgoing_letters/sk-'.$letter->id.'.pdf';
+            Storage::disk('public_web')->put($path, $pdf);
+            $letter->update(['file_path' => $path]);
+        });
     }
 }

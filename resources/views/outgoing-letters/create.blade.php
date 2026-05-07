@@ -4,7 +4,7 @@
             <h1 class="text-xl font-bold text-slate-900 dark:text-white">Tambah Surat Keluar</h1>
             <p class="mt-1 text-sm text-slate-600 dark:text-slate-400">Lengkapi formulir berikut.</p>
             <div class="mt-8">
-                @include('outgoing-letters.partials.form')
+                @include('outgoing-letters.partials.form', ['defaultOrg' => $defaultOrg ?? null])
             </div>
         </div>
     </div>

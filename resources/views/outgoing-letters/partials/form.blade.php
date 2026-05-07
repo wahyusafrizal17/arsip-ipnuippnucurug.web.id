@@ -1,6 +1,7 @@
-@props(['outgoingLetter' => null])
+@props(['outgoingLetter' => null, 'defaultOrg' => null])
 
 @php($editing = $outgoingLetter !== null)
+@php($orgValue = old('organization', $outgoingLetter?->organization ?? $defaultOrg))
 
 <form
     method="POST"
@@ -14,6 +15,16 @@
     @endif
 
     <div class="grid gap-6 sm:grid-cols-2">
+        @if(auth()->user()->isAdmin())
+            <div class="sm:col-span-2">
+                <x-input-label for="organization" value="Organisasi (arsip)" />
+                <select id="organization" name="organization" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:border-slate-700 dark:bg-slate-900 dark:text-white">
+                    <option value="ipnu" @selected($orgValue === 'ipnu')>IPNU</option>
+                    <option value="ippnu" @selected($orgValue === 'ippnu')>IPPNU</option>
+                </select>
+                <x-input-error class="mt-2" :messages="$errors->get('organization')" />
+            </div>
+        @endif
         @include('partials.letter-klasifikasi-indeks', ['letter' => $outgoingLetter])
 
         <div>

@@ -15,6 +15,7 @@ class OutgoingLetter extends Model
      * @var list<string>
      */
     protected $fillable = [
+        'organization',
         'klasifikasi',
         'indeks',
         'tanggal_surat',

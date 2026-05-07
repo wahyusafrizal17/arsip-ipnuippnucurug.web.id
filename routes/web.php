@@ -3,6 +3,7 @@
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\IncomingLetterController;
 use App\Http\Controllers\InventoryController;
+use App\Http\Controllers\JointLetterController;
 use App\Http\Controllers\OutgoingLetterController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -23,6 +24,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('outgoing-letters.download');
 
     Route::resource('inventories', InventoryController::class)->except(['show']);
+
+    Route::get('joint-letters/{joint_letter}/download', [JointLetterController::class, 'download'])
+        ->name('joint-letters.download');
+    Route::resource('joint-letters', JointLetterController::class);
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

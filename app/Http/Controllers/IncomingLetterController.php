@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreIncomingLetterRequest;
 use App\Http\Requests\UpdateIncomingLetterRequest;
 use App\Models\IncomingLetter;
+use App\Support\OrganizationAccess;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -29,48 +30,103 @@ class IncomingLetterController extends Controller
 
     public function index(Request $request)
     {
+        $this->authorize('viewAny', IncomingLetter::class);
+
         [$sort, $direction] = $this->resolvedSort($request);
 
         $letters = IncomingLetter::query()
+            ->tap(fn ($q) => OrganizationAccess::scopeIncomingForUser($q, $request))
             ->search($request->query('q'))
             ->tanggalBetween($request->query('date_from'), $request->query('date_to'))
             ->orderBy($sort, $direction)
             ->paginate(10)
             ->withQueryString();
 
-        return view('incoming-letters.index', compact('letters', 'sort', 'direction'));
+        $pageSubtitle = $this->pageSubtitle($request);
+
+        return view('incoming-letters.index', compact('letters', 'sort', 'direction', 'pageSubtitle'));
     }
 
-    public function create()
+    private function pageSubtitle(Request $request): string
     {
-        return view('incoming-letters.create');
+        $user = $request->user();
+        if ($user->isAdmin()) {
+            $o = $request->query('organization');
+            if ($o === 'ipnu') {
+                return 'Arsip surat masuk organisasi IPNU.';
+            }
+            if ($o === 'ippnu') {
+                return 'Arsip surat masuk organisasi IPPNU.';
+            }
+
+            return 'Semua surat masuk IPNU & IPPNU.';
+        }
+
+        return match ($user->role->letterOrganization()) {
+            'ipnu' => 'Arsip surat masuk administrasi IPNU.',
+            'ippnu' => 'Arsip surat masuk administrasi IPPNU.',
+            default => 'Arsip surat masuk.',
+        };
+    }
+
+    public function create(Request $request)
+    {
+        $this->authorize('create', IncomingLetter::class);
+
+        $defaultOrg = $request->query('organization');
+        if (! in_array($defaultOrg, ['ipnu', 'ippnu'], true)) {
+            $defaultOrg = $request->user()->role->letterOrganization();
+        }
+
+        return view('incoming-letters.create', compact('defaultOrg'));
     }
 
     public function store(StoreIncomingLetterRequest $request)
     {
+        $this->authorize('create', IncomingLetter::class);
+
         $validated = $request->validated();
         unset($validated['file_dokumen']);
+        $validated['organization'] = OrganizationAccess::resolveLetterOrganizationForUser(
+            $request->user(),
+            $validated['organization'] ?? null
+        );
         $validated['file_path'] = $request->file('file_dokumen')->store('incoming_letters', 'public_web');
 
         IncomingLetter::query()->create($validated);
 
-        return redirect()->route('incoming-letters.index')->with('success', 'Surat masuk berhasil disimpan.');
+        $indexParams = ['organization' => $validated['organization']];
+        if (! $request->user()->isAdmin()) {
+            $indexParams = [];
+        }
+
+        return redirect()->route('incoming-letters.index', $indexParams)->with('success', 'Surat masuk berhasil disimpan.');
     }
 
     public function show(IncomingLetter $incomingLetter)
     {
+        $this->authorize('view', $incomingLetter);
+
         return view('incoming-letters.show', compact('incomingLetter'));
     }
 
     public function edit(IncomingLetter $incomingLetter)
     {
+        $this->authorize('update', $incomingLetter);
+
         return view('incoming-letters.edit', compact('incomingLetter'));
     }
 
     public function update(UpdateIncomingLetterRequest $request, IncomingLetter $incomingLetter)
     {
+        $this->authorize('update', $incomingLetter);
+
         $validated = $request->validated();
         unset($validated['file_dokumen']);
+        $validated['organization'] = OrganizationAccess::resolveLetterOrganizationForUser(
+            $request->user(),
+            $validated['organization'] ?? null
+        );
 
         if ($request->hasFile('file_dokumen')) {
             if ($incomingLetter->file_path) {
@@ -86,6 +142,8 @@ class IncomingLetterController extends Controller
 
     public function destroy(IncomingLetter $incomingLetter)
     {
+        $this->authorize('delete', $incomingLetter);
+
         if ($incomingLetter->file_path) {
             Storage::disk('public_web')->delete($incomingLetter->file_path);
         }
@@ -97,6 +155,8 @@ class IncomingLetterController extends Controller
 
     public function download(IncomingLetter $incomingLetter)
     {
+        $this->authorize('view', $incomingLetter);
+
         if (! $incomingLetter->file_path || ! Storage::disk('public_web')->exists($incomingLetter->file_path)) {
             abort(404);
         }

@@ -13,7 +13,7 @@
                     </a>
                 @endif
                 <a href="{{ route('incoming-letters.edit', $incomingLetter) }}" class="inline-flex items-center rounded-xl bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600">Edit</a>
-                <a href="{{ route('incoming-letters.index') }}" class="inline-flex items-center rounded-xl border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 dark:border-slate-600 dark:text-slate-200 dark:hover:bg-slate-800">Kembali</a>
+                <a href="{{ route('incoming-letters.index', auth()->user()->isAdmin() ? array_filter(['organization' => $incomingLetter->organization]) : []) }}" class="inline-flex items-center rounded-xl border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 dark:border-slate-600 dark:text-slate-200 dark:hover:bg-slate-800">Kembali</a>
             </div>
         </div>
 
@@ -24,6 +24,12 @@
                         <dt class="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Klasifikasi</dt>
                         <dd class="mt-1 text-sm font-medium text-slate-900 dark:text-white">{{ config('archive.klasifikasi')[$incomingLetter->klasifikasi] ?? $incomingLetter->klasifikasi }}</dd>
                     </div>
+                    @if(auth()->user()->isAdmin())
+                        <div>
+                            <dt class="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Organisasi arsip</dt>
+                            <dd class="mt-1 text-sm font-medium text-slate-900 dark:text-white">{{ strtoupper($incomingLetter->organization) }}</dd>
+                        </div>
+                    @endif
                     <div>
                         <dt class="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Indeks</dt>
                         <dd class="mt-1 text-sm font-medium text-slate-900 dark:text-white">{{ config('archive.indeks')[$incomingLetter->indeks] ?? strtoupper($incomingLetter->indeks) }}</dd>

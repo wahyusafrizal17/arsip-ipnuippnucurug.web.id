@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             IncomingLetterSeeder::class,
             OutgoingLetterSeeder::class,
+            JointLetterSeeder::class,
             InventorySeeder::class,
         ]);
     }

@@ -2,21 +2,24 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-#[Fillable([
-    'nama_barang',
-    'jumlah',
-    'status_barang',
-    'lokasi_penyimpanan',
-])]
 class Inventory extends Model
 {
     /** @use HasFactory<\Database\Factories\InventoryFactory> */
     use HasFactory;
+
+    /**
+     * @var list<string>
+     */
+    protected $fillable = [
+        'nama_barang',
+        'jumlah',
+        'status_barang',
+        'lokasi_penyimpanan',
+    ];
 
     protected function casts(): array
     {

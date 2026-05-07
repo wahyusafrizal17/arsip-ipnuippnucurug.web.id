@@ -2,23 +2,26 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-#[Fillable([
-    'klasifikasi',
-    'indeks',
-    'tanggal_surat',
-    'penerima',
-    'perihal',
-    'file_path',
-])]
 class OutgoingLetter extends Model
 {
     /** @use HasFactory<\Database\Factories\OutgoingLetterFactory> */
     use HasFactory;
+
+    /**
+     * @var list<string>
+     */
+    protected $fillable = [
+        'klasifikasi',
+        'indeks',
+        'tanggal_surat',
+        'penerima',
+        'perihal',
+        'file_path',
+    ];
 
     protected function casts(): array
     {

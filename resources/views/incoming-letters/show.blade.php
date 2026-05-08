@@ -48,11 +48,7 @@
             <div class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900">
                 <h2 class="px-2 py-2 text-sm font-semibold text-slate-900 dark:text-white">Pratinjau dokumen</h2>
                 @if($incomingLetter->file_path)
-                    <iframe
-                        src="{{ asset($incomingLetter->file_path) }}"
-                        class="mt-2 min-h-[420px] w-full rounded-xl border border-slate-200 dark:border-slate-700"
-                        title="PDF Surat Masuk"
-                    ></iframe>
+                    <x-pdf-document-preview :path="$incomingLetter->file_path" title="PDF Surat Masuk" />
                 @else
                     <p class="mt-4 px-2 text-sm text-slate-500 dark:text-slate-400">Belum ada dokumen PDF untuk surat ini.</p>
                 @endif

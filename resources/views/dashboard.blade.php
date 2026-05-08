@@ -79,18 +79,6 @@
                         </span>
                     </div>
                 </a>
-                <a href="{{ route('joint-letters.index') }}" class="group relative overflow-hidden rounded-2xl border border-slate-200/90 bg-white p-5 shadow-sm ring-1 ring-slate-950/[0.04] transition hover:-translate-y-0.5 hover:border-teal-200/90 hover:shadow-md dark:border-slate-800 dark:bg-slate-900 dark:ring-white/[0.06] dark:hover:border-teal-800">
-                    <div class="flex items-start justify-between gap-4">
-                        <div class="min-w-0">
-                            <p class="text-sm font-medium text-slate-500 dark:text-slate-400">Surat bersama</p>
-                            <p class="mt-2 text-3xl font-bold tabular-nums tracking-tight text-slate-900 dark:text-white">{{ number_format($jointCount) }}</p>
-                            <p class="mt-3 text-xs font-semibold uppercase tracking-wide text-teal-600 opacity-0 transition group-hover:opacity-100 dark:text-teal-400">Lihat daftar →</p>
-                        </div>
-                        <span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-teal-500/15 to-teal-600/5 text-teal-600 shadow-inner dark:from-teal-400/20 dark:to-teal-500/5 dark:text-teal-400">
-                            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" /></svg>
-                        </span>
-                    </div>
-                </a>
                 <a href="{{ route('inventories.index') }}" class="group relative overflow-hidden rounded-2xl border border-slate-200/90 bg-white p-5 shadow-sm ring-1 ring-slate-950/[0.04] transition hover:-translate-y-0.5 hover:border-emerald-200/90 hover:shadow-md dark:border-slate-800 dark:bg-slate-900 dark:ring-white/[0.06] dark:hover:border-emerald-800">
                     <div class="flex items-start justify-between gap-4">
                         <div class="min-w-0">
@@ -105,7 +93,7 @@
                 </a>
             </div>
         @else
-            <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 <a href="{{ route('incoming-letters.index') }}" class="group relative overflow-hidden rounded-2xl border border-slate-200/90 bg-white p-5 shadow-sm ring-1 ring-slate-950/[0.04] transition hover:-translate-y-0.5 hover:border-indigo-200/90 hover:shadow-md dark:border-slate-800 dark:bg-slate-900 dark:ring-white/[0.06] dark:hover:border-indigo-800">
                     <div class="flex items-start justify-between gap-4">
                         <div class="min-w-0">
@@ -127,18 +115,6 @@
                         </div>
                         <span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-violet-500/15 to-violet-600/5 text-violet-600 shadow-inner dark:from-violet-400/20 dark:to-violet-500/5 dark:text-violet-400">
                             <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" /></svg>
-                        </span>
-                    </div>
-                </a>
-                <a href="{{ route('joint-letters.index') }}" class="group relative overflow-hidden rounded-2xl border border-slate-200/90 bg-white p-5 shadow-sm ring-1 ring-slate-950/[0.04] transition hover:-translate-y-0.5 hover:border-teal-200/90 hover:shadow-md dark:border-slate-800 dark:bg-slate-900 dark:ring-white/[0.06] dark:hover:border-teal-800">
-                    <div class="flex items-start justify-between gap-4">
-                        <div class="min-w-0">
-                            <p class="text-sm font-medium text-slate-500 dark:text-slate-400">Surat bersama</p>
-                            <p class="mt-2 text-3xl font-bold tabular-nums tracking-tight text-slate-900 dark:text-white">{{ number_format($jointCount) }}</p>
-                            <p class="mt-3 text-xs font-semibold uppercase tracking-wide text-teal-600 opacity-0 transition group-hover:opacity-100 dark:text-teal-400">Lihat daftar →</p>
-                        </div>
-                        <span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-teal-500/15 to-teal-600/5 text-teal-600 shadow-inner dark:from-teal-400/20 dark:to-teal-500/5 dark:text-teal-400">
-                            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" /></svg>
                         </span>
                     </div>
                 </a>

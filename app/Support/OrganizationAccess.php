@@ -27,10 +27,8 @@ final class OrganizationAccess
         }
 
         $org = $user->role->letterOrganization();
-        if ($org === 'ipnu') {
-            $query->whereIn('organization', ['ipnu', 'ipnu_ippnu']);
-        } elseif ($org === 'ippnu') {
-            $query->whereIn('organization', ['ippnu', 'ipnu_ippnu']);
+        if ($org !== null) {
+            $query->where('organization', $org);
         }
     }
 
@@ -52,10 +50,8 @@ final class OrganizationAccess
         }
 
         $org = $user->role->letterOrganization();
-        if ($org === 'ipnu') {
-            $query->whereIn('organization', ['ipnu', 'ipnu_ippnu']);
-        } elseif ($org === 'ippnu') {
-            $query->whereIn('organization', ['ippnu', 'ipnu_ippnu']);
+        if ($org !== null) {
+            $query->where('organization', $org);
         }
     }
 
@@ -79,10 +75,6 @@ final class OrganizationAccess
         $org = $user->role->letterOrganization();
         if ($org === null) {
             return false;
-        }
-
-        if ($letterOrganization === 'ipnu_ippnu') {
-            return true;
         }
 
         return $letterOrganization === $org;

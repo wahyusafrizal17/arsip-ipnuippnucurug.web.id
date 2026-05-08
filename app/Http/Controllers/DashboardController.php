@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Enums\UserRole;
 use App\Models\IncomingLetter;
 use App\Models\Inventory;
-use App\Models\JointLetter;
 use App\Models\OutgoingLetter;
 use App\Models\User;
 
@@ -16,7 +15,6 @@ class DashboardController extends Controller
         /** @var User $user */
         $user = auth()->user();
 
-        $jointCount = JointLetter::query()->count();
         $inventoryCount = Inventory::query()->count();
 
         $from = now()->subMonths(5)->startOfMonth();
@@ -40,16 +38,14 @@ class DashboardController extends Controller
             $outgoingIppnu = null;
             $outgoingIpnuIppnu = null;
 
-            $orgFilter = $org === 'ipnu' ? ['ipnu', 'ipnu_ippnu'] : ['ippnu', 'ipnu_ippnu'];
-
-            $incomingCount = IncomingLetter::query()->whereIn('organization', $orgFilter)->count();
-            $outgoingCount = OutgoingLetter::query()->whereIn('organization', $orgFilter)->count();
+            $incomingCount = IncomingLetter::query()->where('organization', $org)->count();
+            $outgoingCount = OutgoingLetter::query()->where('organization', $org)->count();
 
             $incomingQuery = IncomingLetter::query()
-                ->whereIn('organization', $orgFilter)
+                ->where('organization', $org)
                 ->where('tanggal_surat', '>=', $from);
             $outgoingQuery = OutgoingLetter::query()
-                ->whereIn('organization', $orgFilter)
+                ->where('organization', $org)
                 ->where('tanggal_surat', '>=', $from);
         }
 
@@ -85,7 +81,6 @@ class DashboardController extends Controller
                 'outgoingIpnu',
                 'outgoingIppnu',
                 'outgoingIpnuIppnu',
-                'jointCount',
                 'inventoryCount',
                 'chartLabels',
                 'incomingTrend',
@@ -98,7 +93,6 @@ class DashboardController extends Controller
             'user',
             'incomingCount',
             'outgoingCount',
-            'jointCount',
             'inventoryCount',
             'chartLabels',
             'incomingTrend',

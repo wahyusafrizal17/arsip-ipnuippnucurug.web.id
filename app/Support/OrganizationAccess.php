@@ -21,8 +21,6 @@ final class OrganizationAccess
             $letterOrgs = array_keys(config('archive.letter_organizations', []));
             if (in_array($org, $letterOrgs, true)) {
                 $query->where('organization', $org);
-            } elseif ($org === 'bersama') {
-                $query->where('klasifikasi', 'bersama');
             }
 
             return;
@@ -48,8 +46,6 @@ final class OrganizationAccess
             $letterOrgs = array_keys(config('archive.letter_organizations', []));
             if (in_array($org, $letterOrgs, true)) {
                 $query->where('organization', $org);
-            } elseif ($org === 'bersama') {
-                $query->where('klasifikasi', 'bersama');
             }
 
             return;

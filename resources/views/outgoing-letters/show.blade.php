@@ -13,7 +13,7 @@
                     </a>
                 @endif
                 <a href="{{ route('outgoing-letters.edit', $outgoingLetter) }}" class="inline-flex items-center rounded-xl bg-violet-600 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-violet-700 dark:bg-violet-500 dark:hover:bg-violet-600">Edit</a>
-                <a href="{{ route('outgoing-letters.index', auth()->user()->isAdmin() ? array_filter(['organization' => $outgoingLetter->klasifikasi === 'bersama' ? 'bersama' : $outgoingLetter->organization]) : []) }}" class="inline-flex items-center rounded-xl border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 dark:border-slate-600 dark:text-slate-200 dark:hover:bg-slate-800">Kembali</a>
+                <a href="{{ route('outgoing-letters.index', auth()->user()->isAdmin() ? array_filter(['organization' => $outgoingLetter->organization]) : []) }}" class="inline-flex items-center rounded-xl border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 dark:border-slate-600 dark:text-slate-200 dark:hover:bg-slate-800">Kembali</a>
             </div>
         </div>
 

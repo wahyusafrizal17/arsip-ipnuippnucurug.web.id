@@ -81,4 +81,38 @@ final class OrganizationAccess
 
         return in_array($klasifikasi, KlasifikasiOptions::keysForUser($user), true);
     }
+
+    public static function scopeInventoryForUser(Builder $query, Request $request): void
+    {
+        $user = $request->user();
+        if (! $user instanceof User) {
+            return;
+        }
+
+        if ($user->role === UserRole::Admin) {
+            $org = $request->query('organization');
+            $letterOrgs = array_keys(config('archive.letter_organizations', []));
+            if (in_array($org, $letterOrgs, true)) {
+                $query->where('organization', $org);
+            }
+
+            return;
+        }
+
+        $org = $user->role->letterOrganization();
+        if ($org !== null) {
+            $query->where('organization', $org);
+        }
+    }
+
+    public static function inventoryVisibleToNonAdmin(User $user, string $organization): bool
+    {
+        if ($user->role === UserRole::Admin) {
+            return true;
+        }
+
+        $org = $user->role->letterOrganization();
+
+        return $org !== null && $organization === $org;
+    }
 }

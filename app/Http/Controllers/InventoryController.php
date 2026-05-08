@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreInventoryRequest;
 use App\Http\Requests\UpdateInventoryRequest;
 use App\Models\Inventory;
+use App\Support\OrganizationAccess;
 use Illuminate\Http\Request;
 
 class InventoryController extends Controller
@@ -31,6 +32,7 @@ class InventoryController extends Controller
         [$sort, $direction] = $this->resolvedSort($request);
 
         $items = Inventory::query()
+            ->tap(fn ($q) => OrganizationAccess::scopeInventoryForUser($q, $request))
             ->search($request->query('q'))
             ->orderBy($sort, $direction)
             ->paginate(10)
@@ -46,25 +48,43 @@ class InventoryController extends Controller
 
     public function store(StoreInventoryRequest $request)
     {
-        Inventory::query()->create($request->validated());
+        $user = $request->user();
+        $data = $request->validated();
+        $orgInput = $user?->isAdmin() ? ($data['organization'] ?? null) : null;
+        unset($data['organization']);
+        $data['organization'] = OrganizationAccess::resolveLetterOrganizationForUser($user, $orgInput);
+
+        Inventory::query()->create($data);
 
         return redirect()->route('inventories.index')->with('success', 'Item inventaris berhasil ditambahkan.');
     }
 
     public function edit(Inventory $inventory)
     {
+        $this->authorize('update', $inventory);
+
         return view('inventories.edit', compact('inventory'));
     }
 
     public function update(UpdateInventoryRequest $request, Inventory $inventory)
     {
-        $inventory->update($request->validated());
+        $this->authorize('update', $inventory);
+
+        $user = $request->user();
+        $data = $request->validated();
+        $orgInput = $user?->isAdmin() ? ($data['organization'] ?? null) : null;
+        unset($data['organization']);
+        $data['organization'] = OrganizationAccess::resolveLetterOrganizationForUser($user, $orgInput);
+
+        $inventory->update($data);
 
         return redirect()->route('inventories.index')->with('success', 'Item inventaris diperbarui.');
     }
 
     public function destroy(Inventory $inventory)
     {
+        $this->authorize('delete', $inventory);
+
         $inventory->delete();
 
         return redirect()->route('inventories.index')->with('success', 'Item inventaris dihapus.');

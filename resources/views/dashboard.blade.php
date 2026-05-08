@@ -137,7 +137,7 @@
             <div class="flex flex-wrap items-end justify-between gap-4">
                 <div>
                     <h2 class="text-lg font-semibold text-slate-900 dark:text-white">Arsip surat (6 bulan)</h2>
-                    <p class="mt-1 text-sm text-slate-600 dark:text-slate-400">Perbandingan surat masuk vs keluar per bulan{{ $user->isAdmin() ? ' (gabungan IPNU &amp; IPPNU)' : ' (organisasi Anda)' }}.</p>
+                    <p class="mt-1 text-sm text-slate-600 dark:text-slate-400">Perbandingan surat masuk vs keluar per bulan.</p>
                 </div>
                 <div class="flex gap-4 text-xs font-medium">
                     <span class="inline-flex items-center gap-2 text-indigo-600 dark:text-indigo-400"><span class="h-2 w-2 rounded-full bg-indigo-500"></span>Masuk</span>

@@ -3,7 +3,12 @@
         <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
                 <h1 class="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">Inventaris</h1>
-                <p class="mt-1 text-sm text-slate-600 dark:text-slate-400">Kelola barang dengan status dan lokasi penyimpanan.</p>
+                <p class="mt-1 text-sm text-slate-600 dark:text-slate-400">
+                    Kelola barang dengan status dan lokasi penyimpanan.
+                    @unless(auth()->user()->isAdmin())
+                        <span class="block mt-1 text-slate-500 dark:text-slate-500">Menampilkan inventaris {{ config('archive.letter_organizations.' . auth()->user()->role->letterOrganization(), auth()->user()->role->letterOrganization()) }}.</span>
+                    @endunless
+                </p>
             </div>
             <a href="{{ route('inventories.create') }}" class="inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-emerald-600/25 transition hover:bg-emerald-700 dark:bg-emerald-500 dark:hover:bg-emerald-600">
                 <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
@@ -12,9 +17,24 @@
         </div>
 
         <form method="GET" action="{{ route('inventories.index') }}" class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-            <label for="q" class="block text-xs font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400">Cari barang</label>
-            <div class="mt-2 flex flex-wrap gap-2">
-                <input id="q" name="q" type="search" value="{{ request('q') }}" placeholder="Nama, lokasi, status..." class="block min-w-[200px] flex-1 rounded-lg border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-950 dark:text-white" />
+            <div class="flex flex-wrap gap-4">
+                <div class="min-w-[200px] flex-1">
+                    <label for="q" class="block text-xs font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400">Cari barang</label>
+                    <input id="q" name="q" type="search" value="{{ request('q') }}" placeholder="Nama, lokasi, status..." class="mt-2 block w-full rounded-lg border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-950 dark:text-white" />
+                </div>
+                @if(auth()->user()->isAdmin())
+                    <div class="min-w-[160px]">
+                        <label for="organization" class="block text-xs font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400">Organisasi</label>
+                        <select id="organization" name="organization" class="mt-2 block w-full rounded-lg border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-950 dark:text-white">
+                            <option value="">Semua</option>
+                            @foreach(config('archive.letter_organizations', []) as $key => $label)
+                                <option value="{{ $key }}" @selected(request('organization') === $key)>{{ $label }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                @endif
+            </div>
+            <div class="mt-3 flex flex-wrap gap-2">
                 <input type="hidden" name="sort" value="{{ $sort }}" />
                 <input type="hidden" name="direction" value="{{ $direction }}" />
                 <button type="submit" class="rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-200">Cari</button>
@@ -53,6 +73,9 @@
                             </th>
                             <th scope="col" class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-600 dark:text-slate-400">Status</th>
                             <th scope="col" class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-600 dark:text-slate-400">Lokasi</th>
+                            @if(auth()->user()->isAdmin())
+                                <th scope="col" class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-600 dark:text-slate-400">Organisasi</th>
+                            @endif
                             <th scope="col" class="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wide text-slate-600 dark:text-slate-400">Aksi</th>
                         </tr>
                     </thead>
@@ -72,6 +95,9 @@
                                     <span class="inline-flex rounded-full px-2.5 py-0.5 text-xs font-semibold ring-1 ring-inset {{ $badge }}">{{ ucfirst($item->status_barang) }}</span>
                                 </td>
                                 <td class="max-w-[180px] truncate px-4 py-3 text-sm text-slate-600 dark:text-slate-400" title="{{ $item->lokasi_penyimpanan }}">{{ $item->lokasi_penyimpanan }}</td>
+                                @if(auth()->user()->isAdmin())
+                                    <td class="whitespace-nowrap px-4 py-3 text-sm text-slate-700 dark:text-slate-300">{{ config('archive.letter_organizations.' . $item->organization, $item->organization) }}</td>
+                                @endif
                                 <td class="whitespace-nowrap px-4 py-3 text-right text-sm">
                                     <a href="{{ route('inventories.edit', $item) }}" class="font-medium text-emerald-700 hover:text-emerald-900 dark:text-emerald-400 dark:hover:text-emerald-300">Edit</a>
                                     <span class="mx-2 text-slate-300 dark:text-slate-600">|</span>
@@ -84,7 +110,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="5" class="px-4 py-12 text-center text-sm text-slate-500 dark:text-slate-400">Belum ada data inventaris.</td>
+                                <td colspan="{{ auth()->user()->isAdmin() ? 6 : 5 }}" class="px-4 py-12 text-center text-sm text-slate-500 dark:text-slate-400">Belum ada data inventaris.</td>
                             </tr>
                         @endforelse
                     </tbody>

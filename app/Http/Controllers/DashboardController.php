@@ -16,7 +16,12 @@ class DashboardController extends Controller
         /** @var User $user */
         $user = auth()->user();
 
-        $inventoryCount = Inventory::query()->count();
+        $inventoryCount = Inventory::query()
+            ->when(
+                $user->role !== UserRole::Admin,
+                fn ($q) => $q->where('organization', $user->role->letterOrganization()),
+            )
+            ->count();
 
         $from = now()->subMonths(5)->startOfMonth();
 

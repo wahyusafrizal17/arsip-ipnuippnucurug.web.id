@@ -18,12 +18,18 @@ class UpdateInventoryRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
+        $rules = [
             'nama_barang' => ['required', 'string', 'max:255'],
             'jumlah' => ['required', 'integer', 'min:0'],
             'status_barang' => ['required', Rule::in(['baik', 'rusak', 'hilang'])],
             'lokasi_penyimpanan' => ['required', 'string', 'max:255'],
         ];
+
+        if ($this->user()?->isAdmin()) {
+            $rules['organization'] = ['required', Rule::in(array_keys(config('archive.letter_organizations', [])))];
+        }
+
+        return $rules;
     }
 
     /**
@@ -36,6 +42,7 @@ class UpdateInventoryRequest extends FormRequest
             'jumlah' => 'jumlah',
             'status_barang' => 'status barang',
             'lokasi_penyimpanan' => 'lokasi penyimpanan',
+            'organization' => 'organisasi',
         ];
     }
 }

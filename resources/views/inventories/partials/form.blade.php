@@ -9,6 +9,18 @@
     @endif
 
     <div class="grid gap-6 sm:grid-cols-2">
+        @if(auth()->user()->isAdmin())
+            <div class="sm:col-span-2">
+                <x-input-label for="organization" value="Organisasi" />
+                <select id="organization" name="organization" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:border-slate-700 dark:bg-slate-900 dark:text-white">
+                    @foreach(config('archive.letter_organizations', []) as $key => $label)
+                        <option value="{{ $key }}" @selected(old('organization', $inventory?->organization ?? 'ipnu') === $key)>{{ $label }}</option>
+                    @endforeach
+                </select>
+                <x-input-error class="mt-2" :messages="$errors->get('organization')" />
+            </div>
+        @endif
+
         <div class="sm:col-span-2">
             <x-input-label for="nama_barang" value="Nama barang" />
             <x-text-input id="nama_barang" name="nama_barang" type="text" class="mt-1 block w-full dark:bg-slate-900 dark:border-slate-700 dark:text-white" :value="old('nama_barang', $inventory?->nama_barang)" required />

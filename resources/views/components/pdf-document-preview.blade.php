@@ -8,7 +8,7 @@
 @endphp
 
 <div {{ $attributes->class('mt-2') }}>
-    {{-- Layar lebar: iframe biasanya berjalan baik di desktop. --}}
+    {{-- Web (tablet ke atas, ≥md): PDF tampil langsung di halaman. --}}
     <div class="hidden md:block">
         <iframe
             src="{{ $src }}#toolbar=1"
@@ -18,7 +18,7 @@
         ></iframe>
     </div>
 
-    {{-- Ponsel / iframe: PDF sering tidak dirender di iframe; buka di tab/aplikasi sistem. --}}
+    {{-- Mobile (<md): iframe PDF sering gagal; kartu buka di tab/aplikasi. --}}
     <div class="md:hidden">
         <a
             href="{{ $src }}"

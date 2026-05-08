@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use Database\Factories\OutgoingLetterFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class OutgoingLetter extends Model
 {
-    /** @use HasFactory<\Database\Factories\OutgoingLetterFactory> */
+    /** @use HasFactory<OutgoingLetterFactory> */
     use HasFactory;
 
     /**
@@ -19,6 +20,7 @@ class OutgoingLetter extends Model
         'klasifikasi',
         'indeks',
         'tanggal_surat',
+        'tanggal_pengiriman',
         'penerima',
         'perihal',
         'file_path',
@@ -28,6 +30,7 @@ class OutgoingLetter extends Model
     {
         return [
             'tanggal_surat' => 'date',
+            'tanggal_pengiriman' => 'date',
         ];
     }
 

@@ -18,7 +18,7 @@ class OutgoingLetterController extends Controller
     {
         $sort = $request->query('sort', 'tanggal_surat');
         $direction = $request->query('direction', 'desc');
-        if (! in_array($sort, ['tanggal_surat', 'indeks', 'created_at'], true)) {
+        if (! in_array($sort, ['tanggal_surat', 'tanggal_pengiriman', 'indeks', 'created_at'], true)) {
             $sort = 'tanggal_surat';
         }
         if (! in_array($direction, ['asc', 'desc'], true)) {

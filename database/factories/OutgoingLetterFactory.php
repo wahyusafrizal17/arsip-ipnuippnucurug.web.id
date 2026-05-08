@@ -22,9 +22,12 @@ class OutgoingLetterFactory extends Factory
             default => ['ipnu'],
         };
 
+        $tanggal = fake()->dateTimeBetween('-14 months');
+
         return [
             'indeks' => fake()->randomElement(array_keys(config('archive.indeks', []))),
-            'tanggal_surat' => fake()->dateTimeBetween('-14 months')->format('Y-m-d'),
+            'tanggal_surat' => $tanggal->format('Y-m-d'),
+            'tanggal_pengiriman' => $tanggal->format('Y-m-d'),
             'penerima' => fake()->company(),
             'perihal' => fake()->sentence(rand(6, 14)),
             'file_path' => null,

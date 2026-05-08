@@ -43,7 +43,7 @@
                     />
                 </div>
                 <h1 class="mt-6 text-2xl font-bold tracking-tight text-white">{{ config('app.name') }}</h1>
-                <p class="mt-2 text-sm text-slate-400">Masuk untuk mengelola arsip digital PR IPNU IPPNI CURUG</p>
+                <p class="mt-2 text-sm text-slate-400">Masuk untuk mengelola arsip digital PR IPNU IPPNU CURUG</p>
             </div>
 
             <div class="rounded-2xl border border-white/10 bg-white/5 p-8 shadow-2xl shadow-black/40 backdrop-blur-xl ring-1 ring-white/10">

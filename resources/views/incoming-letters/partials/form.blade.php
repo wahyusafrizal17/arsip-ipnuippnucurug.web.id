@@ -30,8 +30,14 @@
 
         <div>
             <x-input-label for="tanggal_surat" value="Tanggal surat" />
-            <x-text-input id="tanggal_surat" name="tanggal_surat" type="date" class="mt-1 block w-full dark:bg-slate-900 dark:border-slate-700 dark:text-white" :value="old('tanggal_surat', $incomingLetter?->tanggal_surat?->format('Y-m-d'))" required />
+            <x-text-input id="tanggal_surat" name="tanggal_surat" type="date" class="mt-1 block w-full dark:bg-slate-900 dark:border-slate-700 dark:text-white" :value="old('tanggal_surat', $incomingLetter?->tanggal_surat?->format('Y-m-d') ?: (! $editing ? now()->format('Y-m-d') : ''))" required />
             <x-input-error class="mt-2" :messages="$errors->get('tanggal_surat')" />
+        </div>
+
+        <div>
+            <x-input-label for="tanggal_penerimaan" value="Tanggal penerimaan surat" />
+            <x-text-input id="tanggal_penerimaan" name="tanggal_penerimaan" type="date" class="mt-1 block w-full dark:bg-slate-900 dark:border-slate-700 dark:text-white" :value="old('tanggal_penerimaan', $incomingLetter?->tanggal_penerimaan?->format('Y-m-d') ?: (! $editing ? now()->format('Y-m-d') : ''))" required />
+            <x-input-error class="mt-2" :messages="$errors->get('tanggal_penerimaan')" />
         </div>
 
         <div class="sm:col-span-2">

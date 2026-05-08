@@ -71,6 +71,18 @@
                                     @endif
                                 </a>
                             </th>
+                            <th scope="col" class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-600 dark:text-slate-400">
+                                @php
+                                    $nextDirection = ($sort === 'tanggal_pengiriman' && $direction === 'asc') ? 'desc' : 'asc';
+                                    $qs = array_merge(request()->except('page'), ['sort' => 'tanggal_pengiriman', 'direction' => $nextDirection]);
+                                @endphp
+                                <a href="{{ route('outgoing-letters.index', $qs) }}" class="inline-flex items-center gap-1 hover:text-violet-600 dark:hover:text-violet-400">
+                                    Tgl. pengiriman
+                                    @if($sort === 'tanggal_pengiriman')
+                                        <span class="tabular-nums text-[10px]">{{ $direction === 'asc' ? '↑' : '↓' }}</span>
+                                    @endif
+                                </a>
+                            </th>
                             <th scope="col" class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-600 dark:text-slate-400">Penerima</th>
                             <th scope="col" class="min-w-[200px] px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-600 dark:text-slate-400">Perihal</th>
                             <th scope="col" class="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wide text-slate-600 dark:text-slate-400">Aksi</th>
@@ -85,6 +97,7 @@
                                 <td class="whitespace-nowrap px-4 py-3 text-sm text-slate-900 dark:text-slate-100">{{ config('archive.klasifikasi')[$letter->klasifikasi] ?? $letter->klasifikasi }}</td>
                                 <td class="whitespace-nowrap px-4 py-3 text-sm font-medium text-slate-700 dark:text-slate-300">{{ config('archive.indeks')[$letter->indeks] ?? strtoupper($letter->indeks) }}</td>
                                 <td class="whitespace-nowrap px-4 py-3 text-sm text-slate-600 dark:text-slate-400">{{ $letter->tanggal_surat->format('d/m/Y') }}</td>
+                                <td class="whitespace-nowrap px-4 py-3 text-sm text-slate-600 dark:text-slate-400">{{ $letter->tanggal_pengiriman?->format('d/m/Y') ?? '—' }}</td>
                                 <td class="max-w-[140px] truncate px-4 py-3 text-sm text-slate-700 dark:text-slate-300" title="{{ $letter->penerima }}">{{ $letter->penerima }}</td>
                                 <td class="max-w-xs truncate px-4 py-3 text-sm text-slate-600 dark:text-slate-400" title="{{ $letter->perihal }}">{{ $letter->perihal }}</td>
                                 <td class="whitespace-nowrap px-4 py-3 text-right text-sm">
@@ -101,7 +114,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="{{ auth()->user()->isAdmin() ? 8 : 7 }}" class="px-4 py-12 text-center text-sm text-slate-500 dark:text-slate-400">Belum ada data surat keluar.</td>
+                                <td colspan="{{ auth()->user()->isAdmin() ? 9 : 8 }}" class="px-4 py-12 text-center text-sm text-slate-500 dark:text-slate-400">Belum ada data surat keluar.</td>
                             </tr>
                         @endforelse
                     </tbody>

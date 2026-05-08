@@ -58,6 +58,9 @@ class IncomingLetterController extends Controller
             if ($o === 'ippnu') {
                 return 'Arsip surat masuk organisasi IPPNU.';
             }
+            if ($o === 'bersama') {
+                return 'Surat masuk berklasifikasi Bersama.';
+            }
 
             return 'Semua surat masuk IPNU & IPPNU.';
         }

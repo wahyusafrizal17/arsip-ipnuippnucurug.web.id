@@ -20,6 +20,8 @@ final class OrganizationAccess
             $org = $request->query('organization');
             if ($org === 'ipnu' || $org === 'ippnu') {
                 $query->where('organization', $org);
+            } elseif ($org === 'bersama') {
+                $query->where('klasifikasi', 'bersama');
             }
 
             return;
@@ -42,6 +44,8 @@ final class OrganizationAccess
             $org = $request->query('organization');
             if ($org === 'ipnu' || $org === 'ippnu') {
                 $query->where('organization', $org);
+            } elseif ($org === 'bersama') {
+                $query->where('klasifikasi', 'bersama');
             }
 
             return;

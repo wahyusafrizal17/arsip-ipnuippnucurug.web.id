@@ -58,6 +58,9 @@ class OutgoingLetterController extends Controller
             if ($o === 'ippnu') {
                 return 'Arsip surat keluar organisasi IPPNU.';
             }
+            if ($o === 'bersama') {
+                return 'Surat keluar berklasifikasi Bersama.';
+            }
 
             return 'Semua surat keluar IPNU & IPPNU.';
         }

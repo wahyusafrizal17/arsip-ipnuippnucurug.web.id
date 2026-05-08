@@ -5,7 +5,8 @@
                 <h1 class="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">Surat Keluar</h1>
                 <p class="mt-1 text-sm text-slate-600 dark:text-slate-400">{{ $pageSubtitle }}</p>
             </div>
-            <a href="{{ route('outgoing-letters.create', array_filter(['organization' => auth()->user()->isAdmin() ? request('organization') : null])) }}" class="inline-flex items-center justify-center gap-2 rounded-xl bg-violet-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-violet-600/25 transition hover:bg-violet-700 dark:bg-violet-500 dark:hover:bg-violet-600">
+            @php($adminCreateOrg = auth()->user()->isAdmin() && in_array(request('organization'), ['ipnu', 'ippnu'], true) ? request('organization') : null)
+            <a href="{{ route('outgoing-letters.create', array_filter(['organization' => $adminCreateOrg])) }}" class="inline-flex items-center justify-center gap-2 rounded-xl bg-violet-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-violet-600/25 transition hover:bg-violet-700 dark:bg-violet-500 dark:hover:bg-violet-600">
                 <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
                 Tambah
             </a>
@@ -17,7 +18,8 @@
                     <div>
                         <label for="organization" class="block text-xs font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400">Organisasi</label>
                         <select id="organization" name="organization" class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-violet-500 focus:ring-violet-500 dark:border-slate-700 dark:bg-slate-950 dark:text-white">
-                            <option value="" @selected(! request('organization'))>Bersama</option>
+                            <option value="" @selected(! request()->filled('organization'))>Semua</option>
+                            <option value="bersama" @selected(request('organization') === 'bersama')>Bersama</option>
                             <option value="ipnu" @selected(request('organization') === 'ipnu')>IPNU</option>
                             <option value="ippnu" @selected(request('organization') === 'ippnu')>IPPNU</option>
                         </select>

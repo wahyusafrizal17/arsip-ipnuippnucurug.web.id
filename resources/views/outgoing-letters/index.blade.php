@@ -17,7 +17,7 @@
                     <div>
                         <label for="organization" class="block text-xs font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400">Organisasi</label>
                         <select id="organization" name="organization" class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-violet-500 focus:ring-violet-500 dark:border-slate-700 dark:bg-slate-950 dark:text-white">
-                            <option value="" @selected(! request('organization'))>Semua (IPNU &amp; IPPNU)</option>
+                            <option value="" @selected(! request('organization'))>Bersama</option>
                             <option value="ipnu" @selected(request('organization') === 'ipnu')>IPNU</option>
                             <option value="ippnu" @selected(request('organization') === 'ippnu')>IPPNU</option>
                         </select>

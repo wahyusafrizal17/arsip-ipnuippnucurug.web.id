@@ -23,11 +23,11 @@ final class KlasifikasiOptions
         }
 
         if ($user->role === UserRole::Ipnu) {
-            return array_intersect_key($all, array_flip(['ipnu']));
+            return array_intersect_key($all, array_flip(['ipnu', 'bersama']));
         }
 
         if ($user->role === UserRole::Ippnu) {
-            return array_intersect_key($all, array_flip(['ippnu']));
+            return array_intersect_key($all, array_flip(['ippnu', 'bersama']));
         }
 
         return $all;

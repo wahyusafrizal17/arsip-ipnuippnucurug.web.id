@@ -26,10 +26,8 @@ final class OrganizationAccess
             return;
         }
 
-        $org = $user->role->letterOrganization();
-        if ($org !== null) {
-            $query->where('organization', $org)
-                ->whereIn('klasifikasi', KlasifikasiOptions::keysForUser($user));
+        if ($user->role->letterOrganization() !== null) {
+            self::applyNonAdminLetterScope($query, $user);
         }
     }
 
@@ -50,11 +48,28 @@ final class OrganizationAccess
             return;
         }
 
-        $org = $user->role->letterOrganization();
-        if ($org !== null) {
-            $query->where('organization', $org)
-                ->whereIn('klasifikasi', KlasifikasiOptions::keysForUser($user));
+        if ($user->role->letterOrganization() !== null) {
+            self::applyNonAdminLetterScope($query, $user);
         }
+    }
+
+    /**
+     * Non-admin: surat organisasi sendiri, plus semua surat klasifikasi "bersama"
+     * (mis. disimpan dengan organization ipnu_ippnu oleh admin).
+     */
+    public static function applyNonAdminLetterScope(Builder $query, User $user): void
+    {
+        $org = $user->role->letterOrganization();
+        if ($org === null) {
+            return;
+        }
+
+        $allowed = KlasifikasiOptions::keysForUser($user);
+        $query->whereIn('klasifikasi', $allowed)
+            ->where(function (Builder $q) use ($org) {
+                $q->where('organization', $org)
+                    ->orWhere('klasifikasi', 'bersama');
+            });
     }
 
     public static function resolveLetterOrganizationForUser(User $user, ?string $fromRequest): string
@@ -74,12 +89,17 @@ final class OrganizationAccess
             return true;
         }
 
-        $org = $user->role->letterOrganization();
-        if ($org === null || $organization !== $org) {
+        if (! in_array($klasifikasi, KlasifikasiOptions::keysForUser($user), true)) {
             return false;
         }
 
-        return in_array($klasifikasi, KlasifikasiOptions::keysForUser($user), true);
+        if ($klasifikasi === 'bersama') {
+            return true;
+        }
+
+        $org = $user->role->letterOrganization();
+
+        return $org !== null && $organization === $org;
     }
 
     public static function scopeInventoryForUser(Builder $query, Request $request): void

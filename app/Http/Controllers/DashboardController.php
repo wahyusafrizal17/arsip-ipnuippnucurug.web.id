@@ -7,7 +7,7 @@ use App\Models\IncomingLetter;
 use App\Models\Inventory;
 use App\Models\OutgoingLetter;
 use App\Models\User;
-use App\Support\KlasifikasiOptions;
+use App\Support\OrganizationAccess;
 
 class DashboardController extends Controller
 {
@@ -36,7 +36,6 @@ class DashboardController extends Controller
             $incomingQuery = IncomingLetter::query()->where('tanggal_surat', '>=', $from);
             $outgoingQuery = OutgoingLetter::query()->where('tanggal_surat', '>=', $from);
         } else {
-            $org = $user->role->letterOrganization();
             $incomingIpnu = null;
             $incomingIppnu = null;
             $incomingIpnuIppnu = null;
@@ -44,24 +43,18 @@ class DashboardController extends Controller
             $outgoingIppnu = null;
             $outgoingIpnuIppnu = null;
 
-            $allowedKlasifikasi = KlasifikasiOptions::keysForUser($user);
-
             $incomingCount = IncomingLetter::query()
-                ->where('organization', $org)
-                ->whereIn('klasifikasi', $allowedKlasifikasi)
+                ->tap(fn ($q) => OrganizationAccess::applyNonAdminLetterScope($q, $user))
                 ->count();
             $outgoingCount = OutgoingLetter::query()
-                ->where('organization', $org)
-                ->whereIn('klasifikasi', $allowedKlasifikasi)
+                ->tap(fn ($q) => OrganizationAccess::applyNonAdminLetterScope($q, $user))
                 ->count();
 
             $incomingQuery = IncomingLetter::query()
-                ->where('organization', $org)
-                ->whereIn('klasifikasi', $allowedKlasifikasi)
+                ->tap(fn ($q) => OrganizationAccess::applyNonAdminLetterScope($q, $user))
                 ->where('tanggal_surat', '>=', $from);
             $outgoingQuery = OutgoingLetter::query()
-                ->where('organization', $org)
-                ->whereIn('klasifikasi', $allowedKlasifikasi)
+                ->tap(fn ($q) => OrganizationAccess::applyNonAdminLetterScope($q, $user))
                 ->where('tanggal_surat', '>=', $from);
         }
 

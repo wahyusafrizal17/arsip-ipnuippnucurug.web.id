@@ -42,8 +42,25 @@
             :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'"
         >
             <div class="flex h-16 shrink-0 items-center gap-3 border-b border-slate-200 px-4 dark:border-slate-800">
-                <span class="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-full bg-white shadow-md ring-2 ring-yellow-400/50 dark:bg-emerald-950 dark:ring-yellow-500/40">
-                    @if(Auth::user()->role === \App\Enums\UserRole::Ipnu)
+                @if(Auth::user()->role === \App\Enums\UserRole::Admin)
+                    <span class="flex h-11 shrink-0 items-center justify-center gap-0.5 rounded-xl bg-white px-1 shadow-md ring-2 ring-yellow-400/50 dark:bg-emerald-950 dark:ring-yellow-500/40">
+                        <img
+                            src="{{ asset('images/logo-ipnu.png') }}"
+                            alt="Logo IPNU"
+                            width="36"
+                            height="36"
+                            class="h-9 w-9 object-contain"
+                        />
+                        <img
+                            src="{{ asset('images/logo-ippnu.png') }}"
+                            alt="Logo IPPNU"
+                            width="36"
+                            height="36"
+                            class="h-9 w-9 object-contain"
+                        />
+                    </span>
+                @elseif(Auth::user()->role === \App\Enums\UserRole::Ipnu)
+                    <span class="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-full bg-white shadow-md ring-2 ring-yellow-400/50 dark:bg-emerald-950 dark:ring-yellow-500/40">
                         <img
                             src="{{ asset('images/logo-ipnu.png') }}"
                             alt="Logo IPNU"
@@ -51,7 +68,9 @@
                             height="44"
                             class="h-full w-full object-contain p-0.5"
                         />
-                    @elseif(Auth::user()->role === \App\Enums\UserRole::Ippnu)
+                    </span>
+                @else
+                    <span class="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-full bg-white shadow-md ring-2 ring-yellow-400/50 dark:bg-emerald-950 dark:ring-yellow-500/40">
                         <img
                             src="{{ asset('images/logo-ippnu.png') }}"
                             alt="Logo IPPNU"
@@ -59,10 +78,8 @@
                             height="44"
                             class="h-full w-full object-contain p-0.5"
                         />
-                    @else
-                        <x-application-logo class="h-7 w-7 shrink-0 text-emerald-700 dark:text-emerald-400" />
-                    @endif
-                </span>
+                    </span>
+                @endif
                 <div class="min-w-0">
                     <p class="text-xs font-medium uppercase tracking-wide text-emerald-700 dark:text-emerald-400">{{ Auth::user()->role->label() }}</p>
                     <p class="truncate text-base font-semibold leading-tight">{{ config('app.name') }}</p>

@@ -23,12 +23,12 @@ class OutgoingLetterSeeder extends Seeder
 
         $letters = OutgoingLetter::factory()
             ->count(5)
-            ->state(['organization' => 'ipnu'])
+            ->state(['organization' => 'ipnu', 'klasifikasi' => 'ipnu'])
             ->create()
             ->concat(
                 OutgoingLetter::factory()
                     ->count(5)
-                    ->state(['organization' => 'ippnu'])
+                    ->state(['organization' => 'ippnu', 'klasifikasi' => 'ippnu'])
                     ->create()
             );
 

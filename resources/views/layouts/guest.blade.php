@@ -26,17 +26,24 @@
 
         <div class="relative mx-auto w-full max-w-md">
             <div class="mb-8 flex flex-col items-center text-center">
-                <div class="flex items-center justify-center rounded-full bg-white p-3 shadow-xl shadow-black/30 ring-2 ring-yellow-400/60 ring-offset-4 ring-offset-slate-950">
+                <div class="flex items-center justify-center gap-2 rounded-2xl bg-white p-3 shadow-xl shadow-black/30 ring-2 ring-yellow-400/60 ring-offset-4 ring-offset-slate-950 sm:gap-3 sm:p-4">
                     <img
                         src="{{ asset('images/logo-ipnu.png') }}"
                         alt="Logo IPNU"
-                        width="112"
-                        height="112"
-                        class="h-24 w-24 object-contain sm:h-28 sm:w-28"
+                        width="96"
+                        height="96"
+                        class="h-20 w-20 object-contain sm:h-24 sm:w-24"
+                    />
+                    <img
+                        src="{{ asset('images/logo-ippnu.png') }}"
+                        alt="Logo IPPNU"
+                        width="96"
+                        height="96"
+                        class="h-20 w-20 object-contain sm:h-24 sm:w-24"
                     />
                 </div>
                 <h1 class="mt-6 text-2xl font-bold tracking-tight text-white">{{ config('app.name') }}</h1>
-                <p class="mt-2 text-sm text-slate-400">Masuk untuk mengelola arsip digital IPNU.</p>
+                <p class="mt-2 text-sm text-slate-400">Masuk untuk mengelola arsip digital PR IPNU IPPNI CURUG</p>
             </div>
 
             <div class="rounded-2xl border border-white/10 bg-white/5 p-8 shadow-2xl shadow-black/40 backdrop-blur-xl ring-1 ring-white/10">

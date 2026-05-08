@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Support\KlasifikasiOptions;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -19,7 +20,7 @@ class UpdateJointLetterRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'klasifikasi' => ['required', 'string', Rule::in(array_keys(config('archive.klasifikasi', [])))],
+            'klasifikasi' => ['required', 'string', Rule::in(KlasifikasiOptions::keysForUser($this->user()))],
             'indeks' => ['required', 'string', Rule::in(array_keys(config('archive.indeks', [])))],
             'tanggal_surat' => ['required', 'date'],
             'pengirim' => ['required', 'string', 'max:255'],

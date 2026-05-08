@@ -15,7 +15,7 @@ class IncomingLetterPolicy
 
     public function view(User $user, IncomingLetter $incomingLetter): bool
     {
-        return OrganizationAccess::userCanAccessLetterOrganization($user, $incomingLetter->organization);
+        return OrganizationAccess::letterVisibleToNonAdmin($user, $incomingLetter->organization, $incomingLetter->klasifikasi);
     }
 
     public function create(User $user): bool

@@ -21,16 +21,19 @@ class OutgoingLetterSeeder extends Seeder
             throw new RuntimeException('Gagal membaca: '.$fixture);
         }
 
-        $letters = OutgoingLetter::factory()
-            ->count(5)
-            ->state(['organization' => 'ipnu', 'klasifikasi' => 'ipnu'])
-            ->create()
-            ->concat(
-                OutgoingLetter::factory()
-                    ->count(5)
-                    ->state(['organization' => 'ippnu', 'klasifikasi' => 'ippnu'])
-                    ->create()
+        $letters = collect();
+
+        foreach ([
+            [5, ['organization' => 'ipnu', 'klasifikasi' => 'ipnu']],
+            [2, ['organization' => 'ipnu', 'klasifikasi' => 'bersama']],
+            [5, ['organization' => 'ippnu', 'klasifikasi' => 'ippnu']],
+            [2, ['organization' => 'ippnu', 'klasifikasi' => 'bersama']],
+            [3, ['organization' => 'ipnu_ippnu', 'klasifikasi' => 'bersama']],
+        ] as [$count, $state]) {
+            $letters = $letters->concat(
+                OutgoingLetter::factory()->count($count)->state($state)->create()
             );
+        }
 
         $letters->each(function (OutgoingLetter $letter) use ($pdf) {
             $path = 'outgoing_letters/sk-'.$letter->id.'.pdf';

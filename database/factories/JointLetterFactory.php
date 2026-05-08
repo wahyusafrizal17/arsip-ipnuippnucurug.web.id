@@ -13,7 +13,7 @@ class JointLetterFactory extends Factory
     public function definition(): array
     {
         return [
-            'klasifikasi' => fake()->randomElement(array_keys(config('archive.klasifikasi', []))),
+            'klasifikasi' => 'bersama',
             'indeks' => fake()->randomElement(array_keys(config('archive.indeks', []))),
             'tanggal_surat' => fake()->dateTimeBetween('-14 months')->format('Y-m-d'),
             'pengirim' => fake()->company(),

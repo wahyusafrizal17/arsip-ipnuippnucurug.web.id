@@ -28,7 +28,8 @@ final class OrganizationAccess
 
         $org = $user->role->letterOrganization();
         if ($org !== null) {
-            $query->where('organization', $org);
+            $query->where('organization', $org)
+                ->whereIn('klasifikasi', KlasifikasiOptions::keysForUser($user));
         }
     }
 
@@ -51,7 +52,8 @@ final class OrganizationAccess
 
         $org = $user->role->letterOrganization();
         if ($org !== null) {
-            $query->where('organization', $org);
+            $query->where('organization', $org)
+                ->whereIn('klasifikasi', KlasifikasiOptions::keysForUser($user));
         }
     }
 
@@ -66,17 +68,17 @@ final class OrganizationAccess
         return $user->role->letterOrganization() ?? 'ipnu';
     }
 
-    public static function userCanAccessLetterOrganization(User $user, string $letterOrganization): bool
+    public static function letterVisibleToNonAdmin(User $user, string $organization, string $klasifikasi): bool
     {
         if ($user->role === UserRole::Admin) {
             return true;
         }
 
         $org = $user->role->letterOrganization();
-        if ($org === null) {
+        if ($org === null || $organization !== $org) {
             return false;
         }
 
-        return $letterOrganization === $org;
+        return in_array($klasifikasi, KlasifikasiOptions::keysForUser($user), true);
     }
 }

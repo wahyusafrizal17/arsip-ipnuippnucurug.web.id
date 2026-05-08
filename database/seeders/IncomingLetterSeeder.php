@@ -21,16 +21,19 @@ class IncomingLetterSeeder extends Seeder
             throw new RuntimeException('Gagal membaca: '.$fixture);
         }
 
-        $letters = IncomingLetter::factory()
-            ->count(6)
-            ->state(['organization' => 'ipnu', 'klasifikasi' => 'ipnu'])
-            ->create()
-            ->concat(
-                IncomingLetter::factory()
-                    ->count(6)
-                    ->state(['organization' => 'ippnu', 'klasifikasi' => 'ippnu'])
-                    ->create()
+        $letters = collect();
+
+        foreach ([
+            [6, ['organization' => 'ipnu', 'klasifikasi' => 'ipnu']],
+            [2, ['organization' => 'ipnu', 'klasifikasi' => 'bersama']],
+            [6, ['organization' => 'ippnu', 'klasifikasi' => 'ippnu']],
+            [2, ['organization' => 'ippnu', 'klasifikasi' => 'bersama']],
+            [4, ['organization' => 'ipnu_ippnu', 'klasifikasi' => 'bersama']],
+        ] as [$count, $state]) {
+            $letters = $letters->concat(
+                IncomingLetter::factory()->count($count)->state($state)->create()
             );
+        }
 
         $letters->each(function (IncomingLetter $letter) use ($pdf) {
             $path = 'incoming_letters/sm-'.$letter->id.'.pdf';

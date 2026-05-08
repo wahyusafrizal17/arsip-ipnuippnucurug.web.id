@@ -7,6 +7,7 @@ use App\Models\IncomingLetter;
 use App\Models\Inventory;
 use App\Models\OutgoingLetter;
 use App\Models\User;
+use App\Support\KlasifikasiOptions;
 
 class DashboardController extends Controller
 {
@@ -38,14 +39,24 @@ class DashboardController extends Controller
             $outgoingIppnu = null;
             $outgoingIpnuIppnu = null;
 
-            $incomingCount = IncomingLetter::query()->where('organization', $org)->count();
-            $outgoingCount = OutgoingLetter::query()->where('organization', $org)->count();
+            $allowedKlasifikasi = KlasifikasiOptions::keysForUser($user);
+
+            $incomingCount = IncomingLetter::query()
+                ->where('organization', $org)
+                ->whereIn('klasifikasi', $allowedKlasifikasi)
+                ->count();
+            $outgoingCount = OutgoingLetter::query()
+                ->where('organization', $org)
+                ->whereIn('klasifikasi', $allowedKlasifikasi)
+                ->count();
 
             $incomingQuery = IncomingLetter::query()
                 ->where('organization', $org)
+                ->whereIn('klasifikasi', $allowedKlasifikasi)
                 ->where('tanggal_surat', '>=', $from);
             $outgoingQuery = OutgoingLetter::query()
                 ->where('organization', $org)
+                ->whereIn('klasifikasi', $allowedKlasifikasi)
                 ->where('tanggal_surat', '>=', $from);
         }
 

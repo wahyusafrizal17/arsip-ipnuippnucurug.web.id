@@ -23,6 +23,7 @@ class JointLetterSeeder extends Seeder
 
         JointLetter::factory()
             ->count(6)
+            ->state(['klasifikasi' => 'bersama'])
             ->create()
             ->each(function (JointLetter $letter) use ($pdf) {
                 $path = 'joint_letters/sb-'.$letter->id.'.pdf';

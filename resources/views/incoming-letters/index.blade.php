@@ -5,7 +5,9 @@
                 <h1 class="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">Surat Masuk</h1>
                 <p class="mt-1 text-sm text-slate-600 dark:text-slate-400">{{ $pageSubtitle }}</p>
             </div>
-            @php($adminCreateOrg = auth()->user()->isAdmin() && in_array(request('organization'), ['ipnu', 'ippnu'], true) ? request('organization') : null)
+            @php
+                $adminCreateOrg = auth()->user()->isAdmin() && in_array(request('organization'), ['ipnu', 'ippnu'], true) ? request('organization') : null;
+            @endphp
             <a href="{{ route('incoming-letters.create', array_filter(['organization' => $adminCreateOrg])) }}" class="inline-flex items-center justify-center gap-2 rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-indigo-600/25 transition hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600">
                 <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
                 Tambah

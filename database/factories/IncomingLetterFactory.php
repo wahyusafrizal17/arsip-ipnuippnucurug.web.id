@@ -18,7 +18,7 @@ class IncomingLetterFactory extends Factory
             'pengirim' => fake()->company(),
             'perihal' => fake()->sentence(rand(6, 14)),
             'file_path' => null,
-            'organization' => $org = fake()->randomElement(['ipnu', 'ippnu']),
+            'organization' => $org = fake()->randomElement(array_keys(config('archive.letter_organizations', ['ipnu' => '', 'ippnu' => '']))),
             'klasifikasi' => $org,
         ];
     }

@@ -19,8 +19,9 @@
             <div class="sm:col-span-2">
                 <x-input-label for="organization" value="Organisasi (arsip)" />
                 <select id="organization" name="organization" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:border-slate-700 dark:bg-slate-900 dark:text-white">
-                    <option value="ipnu" @selected($orgValue === 'ipnu')>IPNU</option>
-                    <option value="ippnu" @selected($orgValue === 'ippnu')>IPPNU</option>
+                    @foreach(config('archive.letter_organizations', []) as $value => $label)
+                        <option value="{{ $value }}" @selected($orgValue === $value)>{{ $label }}</option>
+                    @endforeach
                 </select>
                 <x-input-error class="mt-2" :messages="$errors->get('organization')" />
             </div>

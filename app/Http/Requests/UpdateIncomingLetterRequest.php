@@ -29,7 +29,7 @@ class UpdateIncomingLetterRequest extends FormRequest
         ];
 
         if ($this->user()?->isAdmin()) {
-            $rules['organization'] = ['required', Rule::in(['ipnu', 'ippnu'])];
+            $rules['organization'] = ['required', Rule::in(array_keys(config('archive.letter_organizations', [])))];
         }
 
         return $rules;

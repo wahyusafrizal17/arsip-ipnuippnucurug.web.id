@@ -2,9 +2,9 @@
 
 namespace App\Policies;
 
-use App\Enums\UserRole;
 use App\Models\IncomingLetter;
 use App\Models\User;
+use App\Support\OrganizationAccess;
 
 class IncomingLetterPolicy
 {
@@ -15,13 +15,7 @@ class IncomingLetterPolicy
 
     public function view(User $user, IncomingLetter $incomingLetter): bool
     {
-        if ($user->role === UserRole::Admin) {
-            return true;
-        }
-
-        $org = $user->role->letterOrganization();
-
-        return $org !== null && $incomingLetter->organization === $org;
+        return OrganizationAccess::userCanAccessLetterOrganization($user, $incomingLetter->organization);
     }
 
     public function create(User $user): bool

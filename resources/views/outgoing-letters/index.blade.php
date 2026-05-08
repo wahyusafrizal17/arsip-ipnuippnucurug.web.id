@@ -6,7 +6,8 @@
                 <p class="mt-1 text-sm text-slate-600 dark:text-slate-400">{{ $pageSubtitle }}</p>
             </div>
             @php
-                $adminCreateOrg = auth()->user()->isAdmin() && in_array(request('organization'), ['ipnu', 'ippnu'], true) ? request('organization') : null;
+                $letterOrgKeys = array_keys(config('archive.letter_organizations', []));
+                $adminCreateOrg = auth()->user()->isAdmin() && in_array(request('organization'), $letterOrgKeys, true) ? request('organization') : null;
             @endphp
             <a href="{{ route('outgoing-letters.create', array_filter(['organization' => $adminCreateOrg])) }}" class="inline-flex items-center justify-center gap-2 rounded-xl bg-violet-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-violet-600/25 transition hover:bg-violet-700 dark:bg-violet-500 dark:hover:bg-violet-600">
                 <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
@@ -22,8 +23,9 @@
                         <select id="organization" name="organization" class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-violet-500 focus:ring-violet-500 dark:border-slate-700 dark:bg-slate-950 dark:text-white">
                             <option value="" @selected(! request()->filled('organization'))>Semua</option>
                             <option value="bersama" @selected(request('organization') === 'bersama')>Bersama</option>
-                            <option value="ipnu" @selected(request('organization') === 'ipnu')>IPNU</option>
-                            <option value="ippnu" @selected(request('organization') === 'ippnu')>IPPNU</option>
+                            @foreach(config('archive.letter_organizations', []) as $value => $label)
+                                <option value="{{ $value }}" @selected(request('organization') === $value)>{{ $label }}</option>
+                            @endforeach
                         </select>
                     </div>
                 @endif
@@ -79,7 +81,7 @@
                         @forelse($letters as $letter)
                             <tr class="hover:bg-slate-50/80 dark:hover:bg-slate-800/40">
                                 @if(auth()->user()->isAdmin())
-                                    <td class="whitespace-nowrap px-4 py-3 text-sm font-medium uppercase text-slate-700 dark:text-slate-300">{{ strtoupper($letter->organization) }}</td>
+                                    <td class="whitespace-nowrap px-4 py-3 text-sm font-medium text-slate-700 dark:text-slate-300">{{ config('archive.letter_organizations')[$letter->organization] ?? strtoupper($letter->organization) }}</td>
                                 @endif
                                 <td class="whitespace-nowrap px-4 py-3 text-sm text-slate-900 dark:text-slate-100">{{ config('archive.klasifikasi')[$letter->klasifikasi] ?? $letter->klasifikasi }}</td>
                                 <td class="whitespace-nowrap px-4 py-3 text-sm font-medium text-slate-700 dark:text-slate-300">{{ config('archive.indeks')[$letter->indeks] ?? strtoupper($letter->indeks) }}</td>

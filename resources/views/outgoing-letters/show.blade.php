@@ -27,7 +27,7 @@
                     @if(auth()->user()->isAdmin())
                         <div>
                             <dt class="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Organisasi arsip</dt>
-                            <dd class="mt-1 text-sm font-medium text-slate-900 dark:text-white">{{ strtoupper($outgoingLetter->organization) }}</dd>
+                            <dd class="mt-1 text-sm font-medium text-slate-900 dark:text-white">{{ config('archive.letter_organizations')[$outgoingLetter->organization] ?? strtoupper($outgoingLetter->organization) }}</dd>
                         </div>
                     @endif
                     <div>

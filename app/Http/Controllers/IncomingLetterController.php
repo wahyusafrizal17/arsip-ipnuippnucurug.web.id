@@ -58,6 +58,9 @@ class IncomingLetterController extends Controller
             if ($o === 'ippnu') {
                 return 'Arsip surat masuk organisasi IPPNU.';
             }
+            if ($o === 'ipnu_ippnu') {
+                return 'Arsip surat masuk organisasi IPNU IPPNU.';
+            }
             if ($o === 'bersama') {
                 return 'Surat masuk berklasifikasi Bersama.';
             }
@@ -76,9 +79,11 @@ class IncomingLetterController extends Controller
     {
         $this->authorize('create', IncomingLetter::class);
 
+        $allowed = array_keys(config('archive.letter_organizations', []));
         $defaultOrg = $request->query('organization');
-        if (! in_array($defaultOrg, ['ipnu', 'ippnu'], true)) {
-            $defaultOrg = $request->user()->role->letterOrganization();
+        if (! in_array($defaultOrg, $allowed, true)) {
+            $fallback = $request->user()->role->letterOrganization();
+            $defaultOrg = in_array($fallback, $allowed, true) ? $fallback : 'ipnu';
         }
 
         return view('incoming-letters.create', compact('defaultOrg'));

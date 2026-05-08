@@ -18,7 +18,8 @@ final class OrganizationAccess
 
         if ($user->role === UserRole::Admin) {
             $org = $request->query('organization');
-            if ($org === 'ipnu' || $org === 'ippnu') {
+            $letterOrgs = array_keys(config('archive.letter_organizations', []));
+            if (in_array($org, $letterOrgs, true)) {
                 $query->where('organization', $org);
             } elseif ($org === 'bersama') {
                 $query->where('klasifikasi', 'bersama');
@@ -28,8 +29,10 @@ final class OrganizationAccess
         }
 
         $org = $user->role->letterOrganization();
-        if ($org !== null) {
-            $query->where('organization', $org);
+        if ($org === 'ipnu') {
+            $query->whereIn('organization', ['ipnu', 'ipnu_ippnu']);
+        } elseif ($org === 'ippnu') {
+            $query->whereIn('organization', ['ippnu', 'ipnu_ippnu']);
         }
     }
 
@@ -42,7 +45,8 @@ final class OrganizationAccess
 
         if ($user->role === UserRole::Admin) {
             $org = $request->query('organization');
-            if ($org === 'ipnu' || $org === 'ippnu') {
+            $letterOrgs = array_keys(config('archive.letter_organizations', []));
+            if (in_array($org, $letterOrgs, true)) {
                 $query->where('organization', $org);
             } elseif ($org === 'bersama') {
                 $query->where('klasifikasi', 'bersama');
@@ -52,17 +56,39 @@ final class OrganizationAccess
         }
 
         $org = $user->role->letterOrganization();
-        if ($org !== null) {
-            $query->where('organization', $org);
+        if ($org === 'ipnu') {
+            $query->whereIn('organization', ['ipnu', 'ipnu_ippnu']);
+        } elseif ($org === 'ippnu') {
+            $query->whereIn('organization', ['ippnu', 'ipnu_ippnu']);
         }
     }
 
     public static function resolveLetterOrganizationForUser(User $user, ?string $fromRequest): string
     {
         if ($user->role === UserRole::Admin) {
-            return in_array($fromRequest, ['ipnu', 'ippnu'], true) ? $fromRequest : 'ipnu';
+            $keys = array_keys(config('archive.letter_organizations', []));
+
+            return in_array($fromRequest, $keys, true) ? $fromRequest : 'ipnu';
         }
 
         return $user->role->letterOrganization() ?? 'ipnu';
+    }
+
+    public static function userCanAccessLetterOrganization(User $user, string $letterOrganization): bool
+    {
+        if ($user->role === UserRole::Admin) {
+            return true;
+        }
+
+        $org = $user->role->letterOrganization();
+        if ($org === null) {
+            return false;
+        }
+
+        if ($letterOrganization === 'ipnu_ippnu') {
+            return true;
+        }
+
+        return $letterOrganization === $org;
     }
 }

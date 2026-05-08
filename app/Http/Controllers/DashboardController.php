@@ -24,8 +24,10 @@ class DashboardController extends Controller
         if ($user->role === UserRole::Admin) {
             $incomingIpnu = IncomingLetter::query()->where('organization', 'ipnu')->count();
             $incomingIppnu = IncomingLetter::query()->where('organization', 'ippnu')->count();
+            $incomingIpnuIppnu = IncomingLetter::query()->where('organization', 'ipnu_ippnu')->count();
             $outgoingIpnu = OutgoingLetter::query()->where('organization', 'ipnu')->count();
             $outgoingIppnu = OutgoingLetter::query()->where('organization', 'ippnu')->count();
+            $outgoingIpnuIppnu = OutgoingLetter::query()->where('organization', 'ipnu_ippnu')->count();
 
             $incomingQuery = IncomingLetter::query()->where('tanggal_surat', '>=', $from);
             $outgoingQuery = OutgoingLetter::query()->where('tanggal_surat', '>=', $from);
@@ -33,17 +35,21 @@ class DashboardController extends Controller
             $org = $user->role->letterOrganization();
             $incomingIpnu = null;
             $incomingIppnu = null;
+            $incomingIpnuIppnu = null;
             $outgoingIpnu = null;
             $outgoingIppnu = null;
+            $outgoingIpnuIppnu = null;
 
-            $incomingCount = IncomingLetter::query()->where('organization', $org)->count();
-            $outgoingCount = OutgoingLetter::query()->where('organization', $org)->count();
+            $orgFilter = $org === 'ipnu' ? ['ipnu', 'ipnu_ippnu'] : ['ippnu', 'ipnu_ippnu'];
+
+            $incomingCount = IncomingLetter::query()->whereIn('organization', $orgFilter)->count();
+            $outgoingCount = OutgoingLetter::query()->whereIn('organization', $orgFilter)->count();
 
             $incomingQuery = IncomingLetter::query()
-                ->where('organization', $org)
+                ->whereIn('organization', $orgFilter)
                 ->where('tanggal_surat', '>=', $from);
             $outgoingQuery = OutgoingLetter::query()
-                ->where('organization', $org)
+                ->whereIn('organization', $orgFilter)
                 ->where('tanggal_surat', '>=', $from);
         }
 
@@ -75,8 +81,10 @@ class DashboardController extends Controller
                 'user',
                 'incomingIpnu',
                 'incomingIppnu',
+                'incomingIpnuIppnu',
                 'outgoingIpnu',
                 'outgoingIppnu',
+                'outgoingIpnuIppnu',
                 'jointCount',
                 'inventoryCount',
                 'chartLabels',

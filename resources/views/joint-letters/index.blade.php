@@ -15,7 +15,7 @@
             <div class="grid gap-4 md:grid-cols-4 md:items-end">
                 <div class="md:col-span-2">
                     <label for="q" class="block text-xs font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400">Pencarian</label>
-                    <input id="q" name="q" type="search" value="{{ request('q') }}" placeholder="Pengirim, perihal, klasifikasi, indeks..." class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500 dark:border-slate-700 dark:bg-slate-950 dark:text-white" />
+                    <input id="q" name="q" type="search" value="{{ request('q') }}" placeholder="Pengirim, perihal, klasifikasi, indeks (kode atau label seperti A (internal))..." class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500 dark:border-slate-700 dark:bg-slate-950 dark:text-white" />
                 </div>
                 <div>
                     <label for="date_from" class="block text-xs font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400">Dari tanggal</label>

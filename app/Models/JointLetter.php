@@ -2,13 +2,15 @@
 
 namespace App\Models;
 
+use App\Support\ArchiveSearch;
+use Database\Factories\JointLetterFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class JointLetter extends Model
 {
-    /** @use HasFactory<\Database\Factories\JointLetterFactory> */
+    /** @use HasFactory<JointLetterFactory> */
     use HasFactory;
 
     /**
@@ -36,11 +38,22 @@ class JointLetter extends Model
             return $query;
         }
 
-        return $query->where(function (Builder $q) use ($term) {
+        $indeksKeys = ArchiveSearch::keysMatchingLabelOrKey('archive.indeks', $term);
+        $klasifikasiKeys = ArchiveSearch::keysMatchingLabelOrKey('archive.klasifikasi', $term);
+
+        return $query->where(function (Builder $q) use ($term, $indeksKeys, $klasifikasiKeys) {
             $q->where('pengirim', 'like', '%'.$term.'%')
                 ->orWhere('perihal', 'like', '%'.$term.'%')
                 ->orWhere('indeks', 'like', '%'.$term.'%')
                 ->orWhere('klasifikasi', 'like', '%'.$term.'%');
+
+            if ($indeksKeys !== []) {
+                $q->orWhereIn('indeks', $indeksKeys);
+            }
+
+            if ($klasifikasiKeys !== []) {
+                $q->orWhereIn('klasifikasi', $klasifikasiKeys);
+            }
         });
     }
 

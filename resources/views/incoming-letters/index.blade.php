@@ -30,11 +30,12 @@
                 @endif
                 <div class="md:col-span-2">
                     <label for="q" class="block text-xs font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400">Pencarian</label>
-                    <input id="q" name="q" type="search" value="{{ request('q') }}" placeholder="Pengirim, perihal, klasifikasi, indeks..." class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:border-slate-700 dark:bg-slate-950 dark:text-white" />
+                    <input id="q" name="q" type="search" value="{{ request('q') }}" placeholder="Pengirim, perihal, klasifikasi, indeks (kode atau label seperti A (internal))..." class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:border-slate-700 dark:bg-slate-950 dark:text-white" />
                 </div>
                 <div>
                     <label for="date_from" class="block text-xs font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400">Dari tanggal</label>
                     <input id="date_from" name="date_from" type="date" value="{{ request('date_from') }}" class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:border-slate-700 dark:bg-slate-950 dark:text-white" />
+                    <p class="mt-1 text-[11px] text-slate-500 dark:text-slate-500">Berdasarkan tanggal penerimaan surat (fallback tanggal surat).</p>
                 </div>
                 <div>
                     <label for="date_to" class="block text-xs font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400">Sampai tanggal</label>

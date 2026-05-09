@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Support\ArchiveSearch;
 use Database\Factories\OutgoingLetterFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -40,22 +41,36 @@ class OutgoingLetter extends Model
             return $query;
         }
 
-        return $query->where(function (Builder $q) use ($term) {
+        $indeksKeys = ArchiveSearch::keysMatchingLabelOrKey('archive.indeks', $term);
+        $klasifikasiKeys = ArchiveSearch::keysMatchingLabelOrKey('archive.klasifikasi', $term);
+
+        return $query->where(function (Builder $q) use ($term, $indeksKeys, $klasifikasiKeys) {
             $q->where('penerima', 'like', '%'.$term.'%')
                 ->orWhere('perihal', 'like', '%'.$term.'%')
                 ->orWhere('indeks', 'like', '%'.$term.'%')
                 ->orWhere('klasifikasi', 'like', '%'.$term.'%');
+
+            if ($indeksKeys !== []) {
+                $q->orWhereIn('indeks', $indeksKeys);
+            }
+
+            if ($klasifikasiKeys !== []) {
+                $q->orWhereIn('klasifikasi', $klasifikasiKeys);
+            }
         });
     }
 
+    /**
+     * Rentang tanggal mengikuti tanggal pengiriman (prioritas); jika kosong dipakai tanggal surat.
+     */
     public function scopeTanggalBetween(Builder $query, ?string $from, ?string $to): Builder
     {
         if ($from) {
-            $query->whereDate('tanggal_surat', '>=', $from);
+            $query->whereRaw('COALESCE(tanggal_pengiriman, tanggal_surat) >= ?', [$from]);
         }
 
         if ($to) {
-            $query->whereDate('tanggal_surat', '<=', $to);
+            $query->whereRaw('COALESCE(tanggal_pengiriman, tanggal_surat) <= ?', [$to]);
         }
 
         return $query;

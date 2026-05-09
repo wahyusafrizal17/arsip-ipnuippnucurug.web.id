@@ -36,11 +36,14 @@ class IncomingLetterController extends Controller
 
         $letters = IncomingLetter::query()
             ->tap(fn ($q) => OrganizationAccess::scopeIncomingForUser($q, $request))
-            ->search($request->query('q'))
-            ->tanggalBetween($request->query('date_from'), $request->query('date_to'))
+            ->search($request->string('q')->toString() ?: null)
+            ->tanggalBetween(
+                $request->filled('date_from') ? $request->string('date_from')->toString() : null,
+                $request->filled('date_to') ? $request->string('date_to')->toString() : null,
+            )
             ->orderBy($sort, $direction)
             ->paginate(10)
-            ->withQueryString();
+            ->appends($request->except('page'));
 
         $pageSubtitle = $this->pageSubtitle($request);
 

@@ -15,8 +15,8 @@ class InventoryController extends Controller
      */
     private function resolvedSort(Request $request): array
     {
-        $sort = $request->query('sort', 'nama_barang');
-        $direction = $request->query('direction', 'asc');
+        $sort = $request->query('sort', 'created_at');
+        $direction = $request->query('direction', 'desc');
         if (! in_array($sort, ['nama_barang', 'jumlah', 'status_barang', 'created_at'], true)) {
             $sort = 'nama_barang';
         }
@@ -35,6 +35,7 @@ class InventoryController extends Controller
             ->tap(fn ($q) => OrganizationAccess::scopeInventoryForUser($q, $request))
             ->search($request->query('q'))
             ->orderBy($sort, $direction)
+            ->when($sort === 'created_at', fn ($q) => $q->orderBy('id', $direction))
             ->paginate(10)
             ->withQueryString();
 

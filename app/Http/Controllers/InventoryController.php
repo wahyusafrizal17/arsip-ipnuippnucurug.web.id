@@ -73,9 +73,20 @@ class InventoryController extends Controller
 
         $user = $request->user();
         $data = $request->validated();
-        $orgInput = $user?->isAdmin() ? ($data['organization'] ?? null) : null;
+        if ($user?->isAdmin()) {
+            $orgInput = $data['organization'] ?? null;
+        } else {
+            $orgInput = null;
+        }
         unset($data['organization']);
-        $data['organization'] = OrganizationAccess::resolveLetterOrganizationForUser($user, $orgInput);
+
+        if ($user?->isAdmin()) {
+            $data['organization'] = OrganizationAccess::resolveLetterOrganizationForUser($user, $orgInput);
+        } elseif ($inventory->organization === 'ipnu_ippnu') {
+            $data['organization'] = 'ipnu_ippnu';
+        } else {
+            $data['organization'] = OrganizationAccess::resolveLetterOrganizationForUser($user, null);
+        }
 
         $inventory->update($data);
 

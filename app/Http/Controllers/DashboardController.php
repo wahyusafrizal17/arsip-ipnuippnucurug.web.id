@@ -19,7 +19,7 @@ class DashboardController extends Controller
         $inventoryCount = Inventory::query()
             ->when(
                 $user->role !== UserRole::Admin,
-                fn ($q) => $q->where('organization', $user->role->letterOrganization()),
+                fn ($q) => OrganizationAccess::applyNonAdminInventoryScope($q, $user),
             )
             ->count();
 

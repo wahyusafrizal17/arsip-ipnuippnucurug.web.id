@@ -6,7 +6,7 @@
                 <p class="mt-1 text-sm text-slate-600 dark:text-slate-400">
                     Kelola barang dengan status dan lokasi penyimpanan.
                     @unless(auth()->user()->isAdmin())
-                        <span class="block mt-1 text-slate-500 dark:text-slate-500">Menampilkan inventaris {{ config('archive.letter_organizations.' . auth()->user()->role->letterOrganization(), auth()->user()->role->letterOrganization()) }}.</span>
+                        <span class="block mt-1 text-slate-500 dark:text-slate-500">Menampilkan inventaris {{ config('archive.letter_organizations.' . auth()->user()->role->letterOrganization(), auth()->user()->role->letterOrganization()) }} dan inventaris gabungan IPNU IPPNU.</span>
                     @endunless
                 </p>
             </div>

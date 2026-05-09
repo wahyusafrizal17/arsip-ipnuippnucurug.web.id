@@ -119,16 +119,37 @@ final class OrganizationAccess
             return;
         }
 
-        $org = $user->role->letterOrganization();
-        if ($org !== null) {
-            $query->where('organization', $org);
+        self::applyNonAdminInventoryScope($query, $user);
+    }
+
+    /**
+     * Inventaris organisasi sendiri + inventaris arsip gabungan (ipnu_ippnu).
+     */
+    public static function applyNonAdminInventoryScope(Builder $query, User $user): void
+    {
+        if ($user->role === UserRole::Admin) {
+            return;
         }
+
+        $org = $user->role->letterOrganization();
+        if ($org === null) {
+            return;
+        }
+
+        $query->where(function (Builder $q) use ($org) {
+            $q->where('organization', $org)
+                ->orWhere('organization', 'ipnu_ippnu');
+        });
     }
 
     public static function inventoryVisibleToNonAdmin(User $user, string $organization): bool
     {
         if ($user->role === UserRole::Admin) {
             return true;
+        }
+
+        if ($organization === 'ipnu_ippnu') {
+            return in_array($user->role, [UserRole::Ipnu, UserRole::Ippnu], true);
         }
 
         $org = $user->role->letterOrganization();

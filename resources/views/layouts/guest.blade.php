@@ -16,41 +16,45 @@
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="min-h-screen bg-slate-950 font-sans text-slate-100 antialiased">
-    <div class="relative flex min-h-screen flex-col justify-center px-4 py-12 sm:px-6 lg:px-8">
+<body class="min-h-screen bg-gradient-to-br from-slate-50 via-white to-emerald-50/60 font-sans text-slate-900 antialiased">
+    <div class="relative flex min-h-screen flex-col justify-center px-4 py-10 sm:px-6 lg:px-8">
         <div class="pointer-events-none absolute inset-0 overflow-hidden">
-            <div class="absolute -left-24 top-1/4 h-72 w-72 rounded-full bg-emerald-600/20 blur-3xl"></div>
-            <div class="absolute -right-24 bottom-1/4 h-72 w-72 rounded-full bg-yellow-500/15 blur-3xl"></div>
-            <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-emerald-950/50 via-slate-950 to-slate-950"></div>
+            <div class="absolute left-[10%] top-0 h-64 w-64 rounded-full bg-emerald-200/40 blur-3xl"></div>
+            <div class="absolute right-[5%] bottom-[15%] h-72 w-72 rounded-full bg-amber-100/50 blur-3xl"></div>
+            <div class="absolute left-1/2 top-1/2 h-96 w-96 -translate-x-1/2 -translate-y-1/2 rounded-full bg-teal-100/30 blur-3xl"></div>
         </div>
 
         <div class="relative mx-auto w-full max-w-md">
-            <div class="mb-8 flex flex-col items-center text-center">
-                <div class="flex items-center justify-center gap-2 rounded-2xl bg-white p-3 shadow-xl shadow-black/30 ring-2 ring-yellow-400/60 ring-offset-4 ring-offset-slate-950 sm:gap-3 sm:p-4">
+            <header class="mb-8 flex flex-col items-center text-center">
+                <div class="flex items-center justify-center gap-3 rounded-2xl border border-slate-100 bg-white p-4 shadow-lg shadow-slate-200/60 ring-1 ring-slate-100 sm:gap-4 sm:p-5">
                     <img
                         src="{{ asset('images/logo-ipnu.png') }}"
                         alt="Logo IPNU"
                         width="96"
                         height="96"
-                        class="h-20 w-20 object-contain sm:h-24 sm:w-24"
+                        class="h-16 w-16 object-contain sm:h-[72px] sm:w-[72px]"
                     />
                     <img
                         src="{{ asset('images/logo-ippnu.png') }}"
                         alt="Logo IPPNU"
                         width="96"
                         height="96"
-                        class="h-20 w-20 object-contain sm:h-24 sm:w-24"
+                        class="h-16 w-16 object-contain sm:h-[72px] sm:w-[72px]"
                     />
                 </div>
-                <h1 class="mt-6 text-2xl font-bold tracking-tight text-white">{{ config('app.name') }}</h1>
-                <p class="mt-2 text-sm text-slate-400">Masuk untuk mengelola arsip digital PR IPNU IPPNU CURUG</p>
-            </div>
+                <h1 class="mt-6 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
+                    {{ config('app.name') }}
+                </h1>
+                <p class="mt-2 max-w-sm text-sm leading-relaxed text-slate-500">
+                    Masuk untuk mengelola arsip digital PR IPNU IPPNU CURUG
+                </p>
+            </header>
 
-            <div class="rounded-2xl border border-white/10 bg-white/5 p-8 shadow-2xl shadow-black/40 backdrop-blur-xl ring-1 ring-white/10">
+            <div class="rounded-2xl border border-slate-100/80 bg-white/90 p-8 shadow-xl shadow-slate-200/40 backdrop-blur sm:p-9">
                 {{ $slot }}
             </div>
 
-            <p class="mt-8 text-center text-xs text-slate-500">
+            <p class="mt-8 text-center text-xs leading-relaxed text-slate-400">
                 Ikatan Pelajar Nahdlatul Ulama · Sistem Arsip Digital
             </p>
         </div>

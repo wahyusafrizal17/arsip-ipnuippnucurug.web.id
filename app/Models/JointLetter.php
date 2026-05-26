@@ -19,6 +19,7 @@ class JointLetter extends Model
     protected $fillable = [
         'klasifikasi',
         'indeks',
+        'nomor_surat',
         'tanggal_surat',
         'pengirim',
         'perihal',
@@ -42,7 +43,8 @@ class JointLetter extends Model
         $klasifikasiKeys = ArchiveSearch::keysMatchingLabelOrKey('archive.klasifikasi', $term);
 
         return $query->where(function (Builder $q) use ($term, $indeksKeys, $klasifikasiKeys) {
-            $q->where('pengirim', 'like', '%'.$term.'%')
+            $q->where('nomor_surat', 'like', '%'.$term.'%')
+                ->orWhere('pengirim', 'like', '%'.$term.'%')
                 ->orWhere('perihal', 'like', '%'.$term.'%')
                 ->orWhere('indeks', 'like', '%'.$term.'%')
                 ->orWhere('klasifikasi', 'like', '%'.$term.'%');

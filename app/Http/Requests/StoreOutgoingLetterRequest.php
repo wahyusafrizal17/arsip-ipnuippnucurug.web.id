@@ -22,6 +22,7 @@ class StoreOutgoingLetterRequest extends FormRequest
         $rules = [
             'klasifikasi' => ['required', 'string', Rule::in(KlasifikasiOptions::keysForUser($this->user()))],
             'indeks' => ['required', 'string', Rule::in(array_keys(config('archive.indeks', [])))],
+            'nomor_surat' => ['required', 'string', 'max:128'],
             'tanggal_surat' => ['required', 'date'],
             'tanggal_pengiriman' => ['required', 'date'],
             'penerima' => ['required', 'string', 'max:255'],
@@ -44,6 +45,7 @@ class StoreOutgoingLetterRequest extends FormRequest
         return [
             'klasifikasi' => 'klasifikasi',
             'indeks' => 'indeks',
+            'nomor_surat' => 'nomor surat',
             'tanggal_surat' => 'tanggal surat',
             'tanggal_pengiriman' => 'tanggal pengiriman surat',
             'penerima' => 'penerima',

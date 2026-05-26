@@ -3,7 +3,13 @@
         <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
             <div>
                 <h1 class="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">Detail Surat Masuk</h1>
-                <p class="mt-1 text-sm text-slate-600 dark:text-slate-400">{{ config('archive.indeks')[$incomingLetter->indeks] ?? $incomingLetter->indeks }}</p>
+                <p class="mt-1 text-sm text-slate-600 dark:text-slate-400">
+                    @if($incomingLetter->nomor_surat)
+                        <span class="font-mono tabular-nums">{{ $incomingLetter->nomor_surat }}</span>
+                        ·
+                    @endif
+                    {{ config('archive.indeks')[$incomingLetter->indeks] ?? $incomingLetter->indeks }}
+                </p>
             </div>
             <div class="flex flex-wrap gap-2">
                 @if($incomingLetter->file_path)
@@ -30,6 +36,10 @@
                             <dd class="mt-1 text-sm font-medium text-slate-900 dark:text-white">{{ config('archive.letter_organizations')[$incomingLetter->organization] ?? strtoupper($incomingLetter->organization) }}</dd>
                         </div>
                     @endif
+                    <div>
+                        <dt class="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Nomor surat</dt>
+                        <dd class="mt-1 text-sm font-mono font-medium tabular-nums text-slate-900 dark:text-white">{{ $incomingLetter->nomor_surat ?? '—' }}</dd>
+                    </div>
                     <div>
                         <dt class="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Indeks</dt>
                         <dd class="mt-1 text-sm font-medium text-slate-900 dark:text-white">{{ config('archive.indeks')[$incomingLetter->indeks] ?? strtoupper($incomingLetter->indeks) }}</dd>

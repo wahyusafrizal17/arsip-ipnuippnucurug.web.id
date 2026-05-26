@@ -22,6 +22,7 @@ class StoreJointLetterRequest extends FormRequest
         return [
             'klasifikasi' => ['required', 'string', Rule::in(KlasifikasiOptions::keysForUser($this->user()))],
             'indeks' => ['required', 'string', Rule::in(array_keys(config('archive.indeks', [])))],
+            'nomor_surat' => ['required', 'string', 'max:128'],
             'tanggal_surat' => ['required', 'date'],
             'pengirim' => ['required', 'string', 'max:255'],
             'perihal' => ['required', 'string'],
@@ -37,6 +38,7 @@ class StoreJointLetterRequest extends FormRequest
         return [
             'klasifikasi' => 'klasifikasi',
             'indeks' => 'indeks',
+            'nomor_surat' => 'nomor surat',
             'tanggal_surat' => 'tanggal surat',
             'pengirim' => 'pengirim',
             'perihal' => 'perihal',

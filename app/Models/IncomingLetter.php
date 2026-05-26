@@ -20,6 +20,7 @@ class IncomingLetter extends Model
         'organization',
         'klasifikasi',
         'indeks',
+        'nomor_surat',
         'tanggal_surat',
         'tanggal_penerimaan',
         'pengirim',
@@ -45,7 +46,8 @@ class IncomingLetter extends Model
         $klasifikasiKeys = ArchiveSearch::keysMatchingLabelOrKey('archive.klasifikasi', $term);
 
         return $query->where(function (Builder $q) use ($term, $indeksKeys, $klasifikasiKeys) {
-            $q->where('pengirim', 'like', '%'.$term.'%')
+            $q->where('nomor_surat', 'like', '%'.$term.'%')
+                ->orWhere('pengirim', 'like', '%'.$term.'%')
                 ->orWhere('perihal', 'like', '%'.$term.'%')
                 ->orWhere('indeks', 'like', '%'.$term.'%')
                 ->orWhere('klasifikasi', 'like', '%'.$term.'%');

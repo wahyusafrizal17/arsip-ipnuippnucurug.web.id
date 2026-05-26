@@ -30,7 +30,7 @@
                 @endif
                 <div class="md:col-span-2">
                     <label for="q" class="block text-xs font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400">Pencarian</label>
-                    <input id="q" name="q" type="search" value="{{ request('q') }}" placeholder="Penerima, perihal, klasifikasi, indeks (kode atau label seperti A (internal))..." class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-violet-500 focus:ring-violet-500 dark:border-slate-700 dark:bg-slate-950 dark:text-white" />
+                    <input id="q" name="q" type="search" value="{{ request('q') }}" placeholder="Nomor surat, penerima, perihal, klasifikasi, indeks (kode atau label seperti A (internal))..." class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-violet-500 focus:ring-violet-500 dark:border-slate-700 dark:bg-slate-950 dark:text-white" />
                 </div>
                 <div>
                     <label for="date_from" class="block text-xs font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400">Dari tanggal</label>
@@ -60,6 +60,18 @@
                             @endif
                             <th scope="col" class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-600 dark:text-slate-400">Klasifikasi</th>
                             <th scope="col" class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-600 dark:text-slate-400">Indeks</th>
+                            <th scope="col" class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-600 dark:text-slate-400">
+                                @php
+                                    $nextDirection = ($sort === 'nomor_surat' && $direction === 'asc') ? 'desc' : 'asc';
+                                    $qs = array_merge(request()->except('page'), ['sort' => 'nomor_surat', 'direction' => $nextDirection]);
+                                @endphp
+                                <a href="{{ route('outgoing-letters.index', $qs) }}" class="inline-flex items-center gap-1 hover:text-violet-600 dark:hover:text-violet-400">
+                                    Nomor surat
+                                    @if($sort === 'nomor_surat')
+                                        <span class="tabular-nums text-[10px]">{{ $direction === 'asc' ? '↑' : '↓' }}</span>
+                                    @endif
+                                </a>
+                            </th>
                             <th scope="col" class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-600 dark:text-slate-400">
                                 @php
                                     $nextDirection = ($sort === 'tanggal_surat' && $direction === 'asc') ? 'desc' : 'asc';
@@ -97,6 +109,7 @@
                                 @endif
                                 <td class="whitespace-nowrap px-4 py-3 text-sm text-slate-900 dark:text-slate-100">{{ config('archive.klasifikasi')[$letter->klasifikasi] ?? $letter->klasifikasi }}</td>
                                 <td class="whitespace-nowrap px-4 py-3 text-sm font-medium text-slate-700 dark:text-slate-300">{{ config('archive.indeks')[$letter->indeks] ?? strtoupper($letter->indeks) }}</td>
+                                <td class="max-w-[160px] truncate px-4 py-3 text-sm font-mono tabular-nums text-slate-800 dark:text-slate-200" title="{{ $letter->nomor_surat }}">{{ $letter->nomor_surat ?: '—' }}</td>
                                 <td class="whitespace-nowrap px-4 py-3 text-sm text-slate-600 dark:text-slate-400">{{ $letter->tanggal_surat->format('d/m/Y') }}</td>
                                 <td class="whitespace-nowrap px-4 py-3 text-sm text-slate-600 dark:text-slate-400">{{ $letter->tanggal_pengiriman?->format('d/m/Y') ?? '—' }}</td>
                                 <td class="max-w-[140px] truncate px-4 py-3 text-sm text-slate-700 dark:text-slate-300" title="{{ $letter->penerima }}">{{ $letter->penerima }}</td>
@@ -115,7 +128,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="{{ auth()->user()->isAdmin() ? 9 : 8 }}" class="px-4 py-12 text-center text-sm text-slate-500 dark:text-slate-400">Belum ada data surat keluar.</td>
+                                <td colspan="{{ auth()->user()->isAdmin() ? 10 : 9 }}" class="px-4 py-12 text-center text-sm text-slate-500 dark:text-slate-400">Belum ada data surat keluar.</td>
                             </tr>
                         @endforelse
                     </tbody>

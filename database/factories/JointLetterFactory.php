@@ -15,6 +15,7 @@ class JointLetterFactory extends Factory
         return [
             'klasifikasi' => 'bersama',
             'indeks' => fake()->randomElement(array_keys(config('archive.indeks', []))),
+            'nomor_surat' => 'SB/'.fake()->unique()->numerify('####').'/'.(string) fake()->year(),
             'tanggal_surat' => fake()->dateTimeBetween('-14 months')->format('Y-m-d'),
             'pengirim' => fake()->company(),
             'perihal' => fake()->sentence(rand(6, 14)),

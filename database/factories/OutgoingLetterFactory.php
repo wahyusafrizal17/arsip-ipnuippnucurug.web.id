@@ -26,6 +26,7 @@ class OutgoingLetterFactory extends Factory
 
         return [
             'indeks' => fake()->randomElement(array_keys(config('archive.indeks', []))),
+            'nomor_surat' => 'SK/'.fake()->unique()->numerify('####').'/'.(string) fake()->year(),
             'tanggal_surat' => $tanggal->format('Y-m-d'),
             'tanggal_pengiriman' => $tanggal->format('Y-m-d'),
             'penerima' => fake()->company(),
